@@ -1,0 +1,7 @@
+{
+  "SMTP_SERVER": "fuck.bnds.cn",
+  "SMTP_PORT": 465,
+  "EMAIL_ADDRESS": "noreply_forum@bnds.fuck",
+  "EMAIL_PASSWORD": "1145141919810",
+  "SECRET_KEY": "STUPID"
+}
