@@ -38,6 +38,8 @@ def load_config():
             "SESSION_EXPIRE_DAYS": 7,
             "PASSWORD_MIN_LENGTH": 8,
             "PASSWORD_MAX_LENGTH": 128,
+            "USERNAME_MIN_LENGTH": 3,
+            "USERNAME_MAX_LENGTH": 30,
             "REDIS_CONNECT_TIMEOUT": 5,
             "REDIS_SOCKET_TIMEOUT": 5,
             "REDIS_DB": 0,
@@ -103,6 +105,8 @@ VERIFICATION_CODE_EXPIRE_MINUTES = config["VERIFICATION_CODE_EXPIRE_MINUTES"]
 SESSION_EXPIRE_DAYS = config["SESSION_EXPIRE_DAYS"]
 PASSWORD_MIN_LENGTH = config["PASSWORD_MIN_LENGTH"]
 PASSWORD_MAX_LENGTH = config["PASSWORD_MAX_LENGTH"]
+USERNAME_MIN_LENGTH = config.get("USERNAME_MIN_LENGTH", 3)
+USERNAME_MAX_LENGTH = config.get("USERNAME_MAX_LENGTH", 30)
 TIME_FORMAT = config["TIME_FORMAT"]
 RATE_LIMIT_CONFIG = config["RATE_LIMIT"]
 EMAIL_TEMPLATES = config["EMAIL_TEMPLATES"]
@@ -181,11 +185,22 @@ def get_db_connection():
     finally:
         conn.close()
 
-#邮箱格式验证 (grok + 人工)
+# 验证函数 (grok + 人工)
 def validate_email(email):
     if not email or not re.match(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", email):
         raise BadRequest("无效的邮箱格式")
     return email.strip().lower()
+
+def validate_username(username):
+    if not username:
+        raise BadRequest("用户名不能为空")
+    if len(username) < USERNAME_MIN_LENGTH:
+        raise BadRequest(f"用户名长度至少{USERNAME_MIN_LENGTH}个字符")
+    if len(username) > USERNAME_MAX_LENGTH:
+        raise BadRequest(f"用户名长度不能超过{USERNAME_MAX_LENGTH}个字符")
+    if not re.match(r"^[a-zA-Z0-9_\-\u4e00-\u9fa5]+$", username):
+        raise BadRequest("用户名只能包含字母、数字、下划线、连字符和中文")
+    return username.strip()
 
 def validate_password(password):
     if not password:
@@ -197,6 +212,9 @@ def validate_password(password):
     if not re.search(r"(?=.*[a-zA-Z])(?=.*\d)", password):
         raise BadRequest("密码必须包含字母和数字")
     return password
+
+def validate_gender(gender):
+    return gender.lower() if gender else ''
 
 # 频率控制 (grok)
 def can_send_verification(email):
@@ -381,46 +399,70 @@ def register():
             return jsonify({"success": False, "message": "缺少请求数据"}), 400
         
         email = data.get("email")
+        username = data.get("username")
         code = data.get("code")
         password = data.get("password")
+        gender = data.get("gender")
         
-        if not all([email, code, password]):
+        # 参数验证
+        required_fields = [email, username, code, password]
+        if not all(required_fields):
             return jsonify({"success": False, "message": "缺少必要参数"}), 400
 
+        # UID
+        uid = f"user_{datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S')}_{random.randint(1000, 9999)}"
+        
+        # 验证所有字段
         validate_email(email)
+        validate_username(username)
         validate_password(password)
         
-        # 验证
+        # 验证验证码
         is_valid, message = verify_code(email, code)
         if not is_valid:
             return jsonify({"success": False, "message": message}), 400
 
-        # 检查是否存在
+        # 检查是否已存在
         with get_db_connection() as conn:
             cursor = conn.cursor()
+            # 检查 UID 唯一性
+            cursor.execute("SELECT id FROM users WHERE uid=?", (uid,))
+            if cursor.fetchone():
+                return jsonify({"success": False, "message": "系统错误，请重试"}), 500
+            
+            # 检查用户名唯一性
+            cursor.execute("SELECT id FROM users WHERE username=?", (username,))
+            if cursor.fetchone():
+                return jsonify({"success": False, "message": "用户名已被使用"}), 409
+            
+            # 检查邮箱是否已注册
             cursor.execute("SELECT id FROM users WHERE email=?", (email,))
             if cursor.fetchone():
                 return jsonify({"success": False, "message": "邮箱已被注册"}), 409
 
-            # 创建
+            # 创建用户
             hashed_password = generate_password_hash(password)
             created_at = datetime.now(timezone.utc).strftime(TIME_FORMAT)
             cursor.execute("""
-                INSERT INTO users (email, password, created_at) 
-                VALUES (?, ?, ?)
-            """, (email, hashed_password, created_at))
+                INSERT INTO users (uid, username, email, password, gender, created_at) 
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            """, (uid, username, email, hashed_password, gender, created_at))
             user_id = cursor.lastrowid
             conn.commit()
             
-        logger.info(f"用户注册成功: {email} (ID: {user_id})")
-        return jsonify({"success": True, "message": "注册成功，请登录"})
+        logger.info(f"用户注册成功: {uid} ({username}, ID: {user_id})")
+        return jsonify({
+            "success": True, 
+            "message": "注册成功，请登录",
+            "data": {"uid": uid, "username": username}
+        })
                 
     except BadRequest as e:
         logger.warning(f"注册验证失败: {str(e)}")
         return jsonify({"success": False, "message": str(e)}), 400
     except sqlite3.IntegrityError as e:
         logger.error(f"注册时数据库完整性错误: {email}, 错误: {e}")
-        return jsonify({"success": False, "message": "注册失败，邮箱可能已被使用"}), 409
+        return jsonify({"success": False, "message": "注册失败，用户名或邮箱可能已被使用"}), 409
     except Exception as e:
         logger.error(f"注册异常: {e}")
         return jsonify({"success": False, "message": "服务器错误"}), 500
@@ -434,35 +476,53 @@ def login():
         if not data:
             return jsonify({"success": False, "message": "缺少请求数据"}), 400
         
-        email = data.get("email")
+        login_field = data.get("login_field")
         password = data.get("password")
         
-        if not all([email, password]):
+        if not all([login_field, password]):
             return jsonify({"success": False, "message": "缺少必要参数"}), 400
 
-        validate_email(email)
+        validate_password(password)
         
         # 验证用户凭据
         with get_db_connection() as conn:
             cursor = conn.cursor()
-            cursor.execute("SELECT id, password FROM users WHERE email=?", (email,))
+            # 查询
+            cursor.execute("""
+                SELECT id, uid, username, email, password 
+                FROM users 
+                WHERE username=? OR email=?
+            """, (login_field, login_field))
             row = cursor.fetchone()
 
-            if row is None or not check_password_hash(row["password"], password):
-                logger.warning(f"登录失败: {email}")
-                return jsonify({"success": False, "message": "邮箱或密码错误"}), 401
+            if not row or not check_password_hash(row["password"], password):
+                logger.warning(f"登录失败: {login_field}")
+                return jsonify({"success": False, "message": "用户名/邮箱或密码错误"}), 401
 
             user_id = row["id"]
+            uid = row["uid"]
+            username = row["username"]
+            email = row["email"]
+            
             # 设置 session
             session.permanent = True
-            session["user"] = email
+            session["user"] = uid
             session["user_id"] = user_id
+            session["username"] = username
+            session["email"] = email
             session["last_active"] = datetime.now(timezone.utc).isoformat()
             
-        logger.info(f"用户登录成功: {email} (ID: {user_id})")
+        login_type = "邮箱" if "@" in login_field else "用户名"
+        logger.info(f"用户登录成功: {uid} ({username}, {login_type}: {login_field}, ID: {user_id})")
         return jsonify({
             "success": True,
-            "message": "登录成功"
+            "message": "登录成功",
+            "data": {
+                "uid": uid, 
+                "username": username,
+                "email": email,
+                "login_type": login_type
+            }
         })
                 
     except BadRequest as e:
@@ -478,8 +538,10 @@ def login():
 def logout(current_user):
     try:
         user_id = session.get("user_id")
+        username = session.get("username", "Unknown")
+        email = session.get("email", "Unknown")
         session.clear()
-        logger.info(f"用户登出: {current_user} (ID: {user_id})")
+        logger.info(f"用户登出: {current_user} ({username}, {email}, ID: {user_id})")
         return jsonify({"success": True, "message": "已登出"})
     except Exception as e:
         logger.error(f"登出异常: {e}")
@@ -502,7 +564,7 @@ def send_reset_code():
         
         with get_db_connection() as conn:
             cursor = conn.cursor()
-            cursor.execute("SELECT id FROM users WHERE email=?", (email,))
+            cursor.execute("SELECT uid FROM users WHERE email=?", (email,))
             if not cursor.fetchone():
                 return jsonify({"success": False, "message": "邮箱未注册"}), 404
         
@@ -565,42 +627,6 @@ def reset_password():
         logger.error(f"重置密码异常: {e}")
         return jsonify({"success": False, "message": "服务器错误"}), 500
 
-@app.route("/profile", methods=["GET"])
-@token_required
-def profile(current_user):
-    try:
-        user_id = session.get("user_id")
-        with get_db_connection() as conn:
-            cursor = conn.cursor()
-            cursor.execute("""
-                SELECT id, email, created_at, updated_at 
-                FROM users WHERE email=?
-            """, (current_user,))
-            user_data = cursor.fetchone()
-            
-            if not user_data:
-                session.clear()
-                return jsonify({"success": False, "message": "用户数据异常"}), 500
-            
-            # 转换时间格式
-            created_at = user_data["created_at"]
-            updated_at = user_data["updated_at"] or created_at
-            
-            user_info = {
-                "id": user_data["id"],
-                "email": user_data["email"],
-                "created_at": created_at,
-                "last_updated": updated_at
-            }
-            
-        return jsonify({
-            "success": True, 
-            "data": user_info,
-            "message": f"欢迎回来，{current_user}"
-        })
-    except Exception as e:
-        logger.error(f"获取用户信息异常: {e}")
-        return jsonify({"success": False, "message": "服务器错误"}), 500
 
 # 检查 (人工)
 @app.route("/health", methods=["GET"])
@@ -625,7 +651,6 @@ def ratelimit_handler(e):
 # 404
 @app.errorhandler(404)
 def not_found_handler(e):
-
     return jsonify({
         "success": False,
         "message": "接口不存在"
@@ -656,12 +681,16 @@ if __name__ == "__main__":
                 )
             """)
             
-            # 用户表
+            # 用户表 - 新结构，gender/region 默认空
             cursor.execute("""
                 CREATE TABLE IF NOT EXISTS users (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    email TEXT UNIQUE NOT NULL, 
+                    uid TEXT UNIQUE NOT NULL, 
+                    username TEXT UNIQUE NOT NULL,
+                    email TEXT UNIQUE NOT NULL,
                     password TEXT NOT NULL,
+                    gender TEXT DEFAULT '',
+                    region TEXT DEFAULT '',
                     created_at TEXT NOT NULL,
                     updated_at TEXT
                 )
@@ -679,6 +708,8 @@ if __name__ == "__main__":
             """)
             
             # 添加索引
+            cursor.execute("CREATE INDEX IF NOT EXISTS idx_users_uid ON users(uid)")
+            cursor.execute("CREATE INDEX IF NOT EXISTS idx_users_username ON users(username)")
             cursor.execute("CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)")
             cursor.execute("CREATE INDEX IF NOT EXISTS idx_email_verification_email ON email_verification(email)")
             cursor.execute("CREATE INDEX IF NOT EXISTS idx_email_send_log_email ON email_send_log(email)")
@@ -704,6 +735,9 @@ if __name__ == "__main__":
     ║ 主机: {host:>14}                    调试: {str(debug):>5}    ║
     ║ 数据库: {DATABASE_FILE:>14}         验证码长度: {VERIFICATION_CODE_LENGTH:>2}位   ║
     ║ Redis: {redis_config['host']:>14}:{redis_config['port']:>5}  有效期: {VERIFICATION_CODE_EXPIRE_MINUTES}分钟  ║
+    ║ 用户模型: UID + Username + Email + Gender            ║
+    ║ 登录方式: 用户名或邮箱                                 ║
+    ║ Gender/Region: 初始化为空，后期填写                    ║
     ╚══════════════════════════════════════════════════════╝
     """)
     
