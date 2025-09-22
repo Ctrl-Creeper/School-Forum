@@ -1,3 +1,4 @@
+# 初始化 (chatgpt)
 import smtplib, sqlite3, random, ssl, re, json, logging
 from email.mime.text import MIMEText
 from flask import Flask, request, jsonify, session
@@ -12,7 +13,7 @@ from flask_limiter.util import get_remote_address
 import redis
 import functools
 
-# 日志
+# 日志 (grok)
 def setup_logging(config):
     log_level = getattr(logging, config.get("LOG_LEVEL", "INFO"))
     logging.basicConfig(
@@ -24,7 +25,7 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
-# 配置
+# 配置（人工）
 def load_config():
     try:
         with open("config.json", "r", encoding="utf-8") as f:
@@ -90,7 +91,7 @@ def load_config():
 
 config = load_config()
 
-# 全局配置
+# 全局配置 (人工)
 SECRET_KEY = config["SECRET_KEY"]
 SMTP_SERVER = config["SMTP_SERVER"]
 SMTP_PORT = config["SMTP_PORT"]
@@ -118,7 +119,7 @@ limiter = Limiter(
     storage_uri="memory://"
 )
 
-# Redis
+# Redis （grok + 人工)
 app.config["SESSION_TYPE"] = "redis"
 app.config["SESSION_PERMANENT"] = True
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=SESSION_EXPIRE_DAYS)
@@ -133,7 +134,7 @@ redis_config = {
     "socket_timeout": config.get("REDIS_SOCKET_TIMEOUT", 5)
 }
 
-# 测试 Redis
+# 测试 Redis (grok)
 redis_client = None
 try:
     redis_client = redis.StrictRedis(**redis_config)
@@ -148,7 +149,7 @@ except redis.ConnectionError as e:
 
 Session(app)
 
-# 限流
+# 限流 (chatgpt + 人工)
 def get_rate_limits(rule_name):
     limits = RATE_LIMIT_CONFIG.get(rule_name, {})
     result = []
@@ -169,7 +170,7 @@ def apply_rate_limits(func):
         return decorated_function
     return decorator
 
-#数据库链接
+#数据库链接 (chatgpt))
 @contextmanager
 def get_db_connection():
     conn = sqlite3.connect(DATABASE_FILE, check_same_thread=False)
@@ -180,7 +181,7 @@ def get_db_connection():
     finally:
         conn.close()
 
-#邮箱格式验证
+#邮箱格式验证 (grok + 人工)
 def validate_email(email):
     if not email or not re.match(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", email):
         raise BadRequest("无效的邮箱格式")
@@ -197,7 +198,7 @@ def validate_password(password):
         raise BadRequest("密码必须包含字母和数字")
     return password
 
-# 频率控制
+# 频率控制 (grok)
 def can_send_verification(email):
     with get_db_connection() as conn:
         cursor = conn.cursor()
@@ -219,7 +220,7 @@ def log_email_send(email, purpose='verification'):
         """, (email, sent_at, purpose))
         conn.commit()
 
-#邮箱验证码
+#邮箱验证码 (chatgpt + 人工))
 def get_email_template(purpose):
     template = EMAIL_TEMPLATES.get(purpose, EMAIL_TEMPLATES.get("verification", {}))
     expire_minutes = VERIFICATION_CODE_EXPIRE_MINUTES
@@ -235,7 +236,7 @@ def send_verification_email(to_email, purpose='verification'):
         logger.warning(f"验证码发送频率过高: {to_email}")
         return False
     
-    # 生成
+    # 生成 (chatgpt)
     code = ''.join(random.choices('0123456789', k=VERIFICATION_CODE_LENGTH))
     expires_at = datetime.now(timezone.utc) + timedelta(minutes=VERIFICATION_CODE_EXPIRE_MINUTES)
     created_at = datetime.now(timezone.utc)
@@ -274,7 +275,8 @@ def send_verification_email(to_email, purpose='verification'):
     except smtplib.SMTPException as e:
         logger.error(f"邮件发送失败 [{purpose}]: {e}")
         return False
-
+    
+# 验证码验证 (chatgpt + 人工))
 def verify_code(email, code):
     with get_db_connection() as conn:
         cursor = conn.cursor()
@@ -289,7 +291,7 @@ def verify_code(email, code):
 
         db_code, expires_at_str = row
         try:
-            # 解析时间格式
+            # 时间格式
             expires_at = datetime.strptime(expires_at_str, TIME_FORMAT).replace(tzinfo=timezone.utc)
         except ValueError:
             return False, "验证码已过期"
@@ -310,6 +312,7 @@ def verify_code(email, code):
         
         return True, "验证成功"
 
+# 认证装饰器 (chatgpt + grok)
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
@@ -368,7 +371,7 @@ def send_code():
         logger.error(f"发送验证码异常: {e}")
         return jsonify({"success": False, "message": "服务器错误"}), 500
 
-# 注册
+# 注册 (grok + 人工)
 @app.route("/register", methods=["POST"])
 @apply_rate_limits
 def register():
@@ -482,7 +485,7 @@ def logout(current_user):
         logger.error(f"登出异常: {e}")
         return jsonify({"success": False, "message": "服务器错误"}), 500
 
-# 重置密码
+# 重置密码 (grok)
 @app.route("/send_reset_code", methods=["POST"])
 @apply_rate_limits
 def send_reset_code():
@@ -599,7 +602,7 @@ def profile(current_user):
         logger.error(f"获取用户信息异常: {e}")
         return jsonify({"success": False, "message": "服务器错误"}), 500
 
-# 接口检查
+# 检查 (人工)
 @app.route("/health", methods=["GET"])
 def health_check():
     redis_status = "OK" if redis_client and redis_client.ping() else "Unavailable"
@@ -637,7 +640,7 @@ def internal_error_handler(e):
         "message": "服务器内部错误"
     }), 500
 
-# 初始化数据库
+# 初始化数据库 (chatgpt + 人工)
 if __name__ == "__main__":
     try:
         with get_db_connection() as conn:
@@ -687,7 +690,7 @@ if __name__ == "__main__":
         logger.error(f"数据库初始化失败: {e}")
         raise
 
-    # 启动！
+    # 启动！(人工))
     port = config.get("PORT", 5000)
     debug = config.get("DEBUG", False)
     host = config.get("APP_HOST", "0.0.0.0")
