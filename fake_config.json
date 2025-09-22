@@ -1,54 +1,70 @@
 {
-  "SECRET_KEY": "session密钥",
-  "SMTP_SERVER": "smpt",
-  "SMTP_PORT": 端口,
-  "EMAIL_ADDRESS": "邮箱",
-  "EMAIL_PASSWORD": "密码",
-  "REDIS_HOST": "l主机",
-  "REDIS_PORT": 端口 ,
-  "REDIS_PASSWORD": 密码,
-  "REDIS_DB": redis,
-  "REDIS_CONNECT_TIMEOUT": 5,
-  "REDIS_SOCKET_TIMEOUT": 5,
-  "DATABASE_FILE": "数据库名字",
-  "PORT": 端口,
-  "DEBUG": true,
-  "APP_HOST": "主机",
-  "LOG_LEVEL": "INFO",
-  "VERIFICATION_CODE_LENGTH": 6,
-  "VERIFICATION_CODE_EXPIRE_MINUTES": 5,
-  "SESSION_EXPIRE_DAYS": 7,
-  "PASSWORD_MIN_LENGTH": 8,
-  "PASSWORD_MAX_LENGTH": 128,
-  "TIME_FORMAT": "%Y-%m-%d %H:%M:%S",
+  "SECRET_KEY": "随便写",
+  "SMTP_SERVER": "smtp.gmail.com",
+  "SMTP_PORT": 587, //默认
+  "EMAIL_ADDRESS": "noreply@yourcompany.com",
+  "EMAIL_PASSWORD": "abcd efgh ijkl mnop",
+  "DATABASE_FILE": "./data/users.db",
+  "REDIS_HOST": "localhost", //默认
+  "REDIS_PORT": 6379, //默认
+  "REDIS_PASSWORD": "your-redis-password",
+  "REDIS_DB": 0, //数据库编号
+  "REDIS_CONNECT_TIMEOUT": 5, //Redis连接超时（秒）
+  "REDIS_SOCKET_TIMEOUT": 5, //Redis套接字超时（秒）
+  "USERNAME_MIN_LENGTH": 4, //用户名最小长度
+  "USERNAME_MAX_LENGTH": 20, //用户名最大长度
+  "PASSWORD_MIN_LENGTH": 10, //密码最小长度
+  "PASSWORD_MAX_LENGTH": 64, //密码最大长度
+  "USERNAME_ALLOWED_CHARS": "a-zA-Z0-9_\\-\\u4e00-\\u9fff", //允许的用户名字符，支持中文
+  "PASSWORD_PATTERN": "(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@!%*?&])[A-Za-z\\d$@!%*?&]{10,}", //密码必须包含大小写字母、数字和特殊字符
+  "EMAIL_REGEX": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", //邮箱格式
+  "VERIFICATION_CODE_LENGTH": 6, //验证码长度
+  "VERIFICATION_CODE_CHARS": "0123456789", //验证码字符集
+  "VERIFICATION_CODE_EXPIRE_MINUTES": 10, //验证码过期时间（分钟）
+  "SMTP_TIMEOUT": 30, //SMTP连接超时（秒）
+  "EMAIL_PROTOCOL": "tls", //"ssl"或"tls"
+  "FREQUENCY_CHECK_MINUTES": 1, //频率检查时间窗口（分钟）
+  "SESSION_EXPIRE_DAYS": 30, //会话过期时间（天）
+  "TIME_FORMAT": "%Y-%m-%d %H:%M:%S", //时间格式
+  "DEFAULT_LIMITS": [
+    "100 per day",
+    "20 per hour"
+  ], //默认速率限制
+  "LIMITER_STORAGE": "redis://localhost:6379/0", //速率限制存储，使用Redis
   "RATE_LIMIT": {
     "send_code": {
-      "minute": 5,
-      "hour": 30
-    },
-    "register": {
-      "hour": 5
-    },
-    "login": {
-      "minute": 10,
-      "hour": 100
-    },
-    "send_reset_code": {
       "minute": 3,
       "hour": 20
-    },
+    }, //每分钟3次，每小时20次
+    "register": {
+      "hour": 3
+    }, //每小时3次
+    "login": {
+      "minute": 5,
+      "hour": 50
+    }, //每分钟5次，每小时50次
+    "send_reset_code": {
+      "minute": 2,
+      "hour": 15
+    }, //每分钟2次，每小时15次
     "reset_password": {
-      "hour": 5
-    }
+      "hour": 3
+    } //每小时3次
   },
   "EMAIL_TEMPLATES": {
     "verification": {
-      "subject": "注册验证码",
-      "body": "你好！\n\n你的注册验证码是：{code}\n\n此验证码{expire_minutes}分钟内有效，请勿泄露给他人。\n\n如有疑问请联系客服。"
+      "subject": "[YourApp] 注册验证码",
+      "body": "您的注册验证码是：{code}，{expire_minutes}分钟内有效。"
     },
     "reset": {
-      "subject": "密码重置验证码",
-      "body": "你好！\n\n你正在重置密码，验证码是：{code}\n\n此验证码{expire_minutes}分钟内有效，请勿泄露给他人。\n\n如果这不是你发起的操作，请忽略此邮件。\n\n如有疑问请联系客服。"
+      "subject": "[YourApp] 密码重置验证码",
+      "body": "密码重置验证码：{code}，{expire_minutes}分钟内有效。"
     }
-  }
+  },
+  "PORT": 8080, //默认端口
+  "APP_HOST": "0.0.0.0", //默认监听所有地址
+  "ENV": "production", //"development"或"production"
+  "DEBUG": false, //调试模式
+  "LOG_LEVEL": "INFO", //日志级别：DEBUG, INFO, WARNING, ERROR, CRITICAL
+  "LOG_FORMAT": "%(asctime)s [%(levelname)s] %(name)s: %(message)s" //日志格式
 }
