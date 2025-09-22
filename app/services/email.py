@@ -7,7 +7,7 @@ from app.utils.logger import logger
 from app.services.verification import log_email_send, store_verification_code
 
 def send_verification_email(to_email, purpose='verification'):
-    from app.services.verification_service import can_send_verification
+    from app.services.verification import can_send_verification
     if not can_send_verification(to_email):
         logger.warning(f"验证码发送频率过高: {to_email}")
         return False

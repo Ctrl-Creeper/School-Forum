@@ -1,6 +1,8 @@
 # /services/verification_service.py
-from app.utils.config import config, get_db_connection
+from app.utils.config import config
 from datetime import datetime, timezone
+from app.utils.config import config
+from app.utils.db import get_db_connection
 
 def can_send_verification(email):
     with get_db_connection() as conn:

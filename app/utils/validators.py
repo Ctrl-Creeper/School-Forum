@@ -1,7 +1,8 @@
 # /utils/validators.py
 import re
-from flask import escape
+from markupsafe import escape
 from app.utils.config import config
+
 
 def validate_email(email):
     if not email or not re.match(config["EMAIL_REGEX"], email):

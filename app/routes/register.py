@@ -6,7 +6,7 @@ from app.services.email import send_verification_email
 from app.utils.csrf import csrf_protect
 from app.utils.config import config
 from app.utils.logger import logger
-from app.utils.config import get_db_connection
+from app.utils.db import get_db_connection
 from werkzeug.security import generate_password_hash
 from datetime import datetime, timezone
 

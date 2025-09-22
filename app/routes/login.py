@@ -1,7 +1,8 @@
 # app/routes/login.py
 from flask import Blueprint, request, jsonify, session
 from app.utils.csrf import csrf_protect
-from app.utils.config import config, get_db_connection
+from app.utils.config import config
+from app.utils.db import get_db_connection
 from app.utils.logger import logger
 from werkzeug.security import check_password_hash
 from datetime import datetime, timezone
