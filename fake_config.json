@@ -1,7 +1,54 @@
 {
-  "SMTP_SERVER": "fuck.bnds.cn",
-  "SMTP_PORT": 465,
-  "EMAIL_ADDRESS": "noreply_forum@bnds.fuck",
-  "EMAIL_PASSWORD": "1145141919810",
-  "SECRET_KEY": "STUPID"
+  "SECRET_KEY": "session密钥",
+  "SMTP_SERVER": "smpt",
+  "SMTP_PORT": 端口,
+  "EMAIL_ADDRESS": "邮箱",
+  "EMAIL_PASSWORD": "密码",
+  "REDIS_HOST": "l主机",
+  "REDIS_PORT": 端口 ,
+  "REDIS_PASSWORD": 密码,
+  "REDIS_DB": redis,
+  "REDIS_CONNECT_TIMEOUT": 5,
+  "REDIS_SOCKET_TIMEOUT": 5,
+  "DATABASE_FILE": "数据库名字",
+  "PORT": 端口,
+  "DEBUG": true,
+  "APP_HOST": "主机",
+  "LOG_LEVEL": "INFO",
+  "VERIFICATION_CODE_LENGTH": 6,
+  "VERIFICATION_CODE_EXPIRE_MINUTES": 5,
+  "SESSION_EXPIRE_DAYS": 7,
+  "PASSWORD_MIN_LENGTH": 8,
+  "PASSWORD_MAX_LENGTH": 128,
+  "TIME_FORMAT": "%Y-%m-%d %H:%M:%S",
+  "RATE_LIMIT": {
+    "send_code": {
+      "minute": 5,
+      "hour": 30
+    },
+    "register": {
+      "hour": 5
+    },
+    "login": {
+      "minute": 10,
+      "hour": 100
+    },
+    "send_reset_code": {
+      "minute": 3,
+      "hour": 20
+    },
+    "reset_password": {
+      "hour": 5
+    }
+  },
+  "EMAIL_TEMPLATES": {
+    "verification": {
+      "subject": "注册验证码",
+      "body": "你好！\n\n你的注册验证码是：{code}\n\n此验证码{expire_minutes}分钟内有效，请勿泄露给他人。\n\n如有疑问请联系客服。"
+    },
+    "reset": {
+      "subject": "密码重置验证码",
+      "body": "你好！\n\n你正在重置密码，验证码是：{code}\n\n此验证码{expire_minutes}分钟内有效，请勿泄露给他人。\n\n如果这不是你发起的操作，请忽略此邮件。\n\n如有疑问请联系客服。"
+    }
+  }
 }
