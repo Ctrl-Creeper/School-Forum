@@ -29,93 +29,21 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
-# 配置（人工）
+# 配置（人工） - 改为 YAML
 def load_config():
     try:
-        with open("config.json", "r", encoding="utf-8") as f:
-            config = json.load(f)
-        
-        default_config = {
-            "DATABASE_FILE": "data.db",
-            "VERIFICATION_CODE_LENGTH": 6,
-            "VERIFICATION_CODE_EXPIRE_MINUTES": 5,
-            "SESSION_EXPIRE_DAYS": 7,
-            "PASSWORD_MIN_LENGTH": 8,
-            "PASSWORD_MAX_LENGTH": 128,
-            "USERNAME_MIN_LENGTH": 3,
-            "USERNAME_MAX_LENGTH": 30,
-            "REDIS_CONNECT_TIMEOUT": 5,
-            "REDIS_SOCKET_TIMEOUT": 5,
-            "REDIS_DB": 0,
-            "PORT": 5000,
-            "DEBUG": True,
-            "LOG_LEVEL": "INFO",
-            "APP_HOST": "0.0.0.0",
-            "ENV": "development",
-            "RATE_LIMIT": {
-                "send_code": {"minute": 5, "hour": 30},
-                "register": {"hour": 5},
-                "login": {"minute": 10, "hour": 100},
-                "send_reset_code": {"minute": 3, "hour": 20},
-                "reset_password": {"hour": 5}
-            },
-            "EMAIL_TEMPLATES": {
-                "verification": {
-                    "subject": "注册验证码",
-                    "body": "你的验证码是 {code}，{expire_minutes}分钟内有效。"
-                },
-                "reset": {
-                    "subject": "密码重置验证码",
-                    "body": "你正在重置密码，验证码是 {code}，{expire_minutes}分钟内有效。"
-                }
-            },
-            "TIME_FORMAT": "%Y-%m-%d %H:%M:%S",
-            "VERIFICATION_CODE_CHARS": "0123456789",
-            "USERNAME_ALLOWED_CHARS": "a-zA-Z0-9_\\-\\u4e00-\\u9fa5",
-            # 修复：添加长度限制
-            "PASSWORD_PATTERN": "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,128}$",
-            "PASSWORD_SPECIAL_CHARS": "@$!%*?&",
-            "EMAIL_REGEX": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
-            "EMAIL_PROTOCOL": "ssl",
-            "SMTP_TIMEOUT": 30,
-            "FREQUENCY_CHECK_MINUTES": 1,
-            "DEFAULT_LIMITS": ["200 per day", "50 per hour"],
-            "LIMITER_STORAGE": "memory://",
-            "LOG_FORMAT": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-        }
-        
-        for key, value in default_config.items():
-            if key not in config:
-                config[key] = value
-        
-        required_configs = [
-            "SECRET_KEY", "SMTP_SERVER", "SMTP_PORT", 
-            "EMAIL_ADDRESS", "EMAIL_PASSWORD", "DATABASE_FILE",
-            "VERIFICATION_CODE_LENGTH", "VERIFICATION_CODE_EXPIRE_MINUTES",
-            "SESSION_EXPIRE_DAYS", "PASSWORD_MIN_LENGTH", "PASSWORD_MAX_LENGTH",
-            "USERNAME_MIN_LENGTH", "USERNAME_MAX_LENGTH", "TIME_FORMAT",
-            "VERIFICATION_CODE_CHARS", "USERNAME_ALLOWED_CHARS",
-            "PASSWORD_PATTERN", "EMAIL_REGEX",
-            "EMAIL_PROTOCOL", "SMTP_TIMEOUT", "FREQUENCY_CHECK_MINUTES",
-            "DEFAULT_LIMITS", "LIMITER_STORAGE", "LOG_FORMAT",
-            "LOG_LEVEL", "PORT", "APP_HOST", "ENV", "REDIS_CONNECT_TIMEOUT",
-            "REDIS_SOCKET_TIMEOUT", "REDIS_DB"
-        ]
-        missing = [key for key in required_configs if key not in config]
-        if missing:
-            raise ValueError(f"配置文件缺少必需项: {', '.join(missing)}")
-        
-        return config
-        
+        with open("config.yaml", "r", encoding="utf-8") as f:
+            config = yaml.safe_load(f)
     except FileNotFoundError:
-        logger.error("找不到 config.json 文件")
+        logger.error("找不到 config.yaml 文件")
         raise
-    except json.JSONDecodeError:
-        logger.error("config.json 格式错误")
+    except yaml.YAMLError as e:
+        logger.error(f"config.yaml 格式错误: {e}")
         raise
     except ValueError as e:
         logger.error(f"配置验证失败: {e}")
         raise
+    return config
 
 config = load_config()
 
