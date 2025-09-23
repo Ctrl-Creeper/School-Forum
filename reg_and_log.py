@@ -1,5 +1,5 @@
 # 初始化 (chatgpt)
-import smtplib, sqlite3, random, ssl, re, json, logging
+import smtplib, sqlite3, random, ssl, re, logging
 import secrets
 import hashlib
 from html import escape
@@ -15,6 +15,8 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 import redis
 import functools
+
+import yaml
 
 # 日志 (grok)
 def setup_logging(config):
@@ -105,10 +107,8 @@ limiter = Limiter(
 )
 
 # CSRF 保护 (grok) - 修复：一次性 Token
-def generate_csrf_token():
-    if "csrf_token" not in session:
-        session["csrf_token"] = secrets.token_urlsafe(32)
-    return session["csrf_token"]
+# 移动 generate_csrf_token 到 app/utils/csrf.py
+from app.utils.csrf import generate_csrf_token
 
 def verify_csrf_token(token):
     stored_token = session.get("csrf_token")
@@ -647,16 +647,6 @@ def reset_password():
     except Exception as e:
         logger.error(f"重置密码异常: {e}")
         return error_response("服务器错误", 500)
-
-# CSRF Token 生成接口 (grok) - 修复：生成新 Token
-@app.route("/csrf_token", methods=["GET"])
-def get_csrf_token():
-    token = generate_csrf_token()
-    return jsonify({
-        "success": True,
-        "csrf_token": token,
-        "timestamp": datetime.now(timezone.utc).isoformat()
-    })
 
 # 检查 (人工)
 @app.route("/health", methods=["GET"])
