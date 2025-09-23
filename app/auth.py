@@ -1,10 +1,14 @@
 from functools import wraps
-from flask import session, jsonify
+from flask import session, jsonify, Blueprint
 from datetime import datetime, timedelta, timezone
-import logging
-import config 
+import logging 
+from app.utils.config import config
+
 
 logger = logging.getLogger(__name__)
+
+
+auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 
 def error_response(message, status_code, error_code=None):
     response_data = {
