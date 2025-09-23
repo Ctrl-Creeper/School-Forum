@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A-Level Courses Discussion Forum</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        .course-section {
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .course-header {
+            background-color: #e74c3c;
+            color: white;
+            padding: 15px;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .course-content {
+            display: none;
+            padding: 15px;
+            background-color: white;
+        }
+        .course-content.show {
+            display: block;
+        }
+        .post {
+            border-bottom: 1px solid #eee;
+            padding: 10px 0;
+        }
+        .post:last-child {
+            border-bottom: none;
+        }
+        .post-header {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .post-body {
+            margin-top: 5px;
+            color: #555;
+        }
+        .post-form {
+            margin-top: 15px;
+        }
+        .post-form textarea {
+            width: 100%;
+            height: 80px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            resize: vertical;
+        }
+        .post-form input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .post-form button {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .post-form button:hover {
+            background-color: #c0392b;
+        }
+        .guidelines {
+            background-color: #fce4e4;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 600px) {
+            .course-header {
+                font-size: 16px;
+            }
+            .post-form textarea, .post-form input[type="text"] {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>A-Level Courses Discussion Forum</h1>
+    <div class="guidelines">
+        <p><strong>Welcome to the A-Level Courses Discussion Forum!</strong> This is a space for students to share experiences about A-Level courses. Discuss teacher grading styles, course difficulty, workload, or tips for success. <strong>Rules:</strong> Keep it respectful—no personal attacks on teachers or students. Posts are moderated.</p>
+    </div>
+
+    <!-- Course Sections -->
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            1. Mathematics (数学)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post">
+                <div class="post-header">MathGuru2025 (Year 13)</div>
+                <div class="post-body">A-Level Maths is intense, especially Mechanics and Pure. Ms. Thompson grades fairly but marks harshly on careless errors. Difficulty: 7/10. Tip: Master past papers for A*.</div>
+            </div>
+            <div class="post">
+                <div class="post-header">NumberNinja (Year 12)</div>
+                <div class="post-body">Pure Maths is okay, but Statistics trips me up. Mr. Lee gives good feedback, but exams are tough. Workload: ~8 hours/week.</div>
+            </div>
+            <div class="post-form">
+                <input type="text" id="username-1" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-1" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(1)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            2. Further Mathematics (进阶数学)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post">
+                <div class="post-header">FurtherFan (Year 13)</div>
+                <div class="post-body">Further Maths is NOT for the faint-hearted. Complex numbers and matrices are brutal. Dr. Patel is strict but fair; expect A if you nail proofs. Workload: 10+ hours/week.</div>
+            </div>
+            <div class="post-form">
+                <input type="text" id="username-2" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-2" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(2)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            3. Chinese (语文)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post">
+                <div class="post-header">LitStarCN (Year 13)</div>
+                <div class="post-body">Chinese is heavy on essay writing and classical texts. Ms. Li grades based on depth of analysis; non-natives struggle. Difficulty: 6/10 for natives, 8/10 for others.</div>
+            </div>
+            <div class="post-form">
+                <input type="text" id="username-3" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-3" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(3)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            4. Physics (物理)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post">
+                <div class="post-header">Physicist2025 (Year 13)</div>
+                <div class="post-body">Physics is challenging—waves and electricity are tough. Mr. Brown’s practicals are fun, but his tests are hard. Aim for A* with consistent revision. Workload: 7-8 hours/week.</div>
+            </div>
+            <div class="post-form">
+                <input type="text" id="username-4" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-4" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(4)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            5. Chemistry (化学)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-5" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-5" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(5)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            6. Biology (生物)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-6" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-6" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(6)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            7. Economics (经济)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-7" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-7" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(7)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            8. Business (商学)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-8" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-8" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(8)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            9. Computer Science (计算机科学)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-9" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-9" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(9)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            10. First Language English (英语)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-10" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-10" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(10)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            11. English Language and Literature (英语文学)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-11" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-11" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(11)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle course section visibility
+        function toggleSection(header) {
+            const content = header.nextElementSibling;
+            const arrow = header.querySelector('span');
+            content.classList.toggle('show');
+            arrow.textContent = content.classList.contains('show') ? '▲' : '▼';
+        }
+
+        // Submit post and append to course section
+        function submitPost(courseId) {
+            const usernameInput = document.getElementById(`username-${courseId}`);
+            const commentInput = document.getElementById(`comment-${courseId}`);
+            const username = usernameInput.value.trim() || 'Anonymous';
+            const comment = commentInput.value.trim();
+
+            if (!comment) {
+                alert('Please enter a comment.');
+                return;
+            }
+
+            const postContainer = document.querySelector(`#username-${courseId}`).parentElement;
+            const newPost = document.createElement('div');
+            newPost.className = 'post';
+            newPost.innerHTML = `
+                <div class="post-header">${username}</div>
+                <div class="post-body">${comment}</div>
+            `;
+
+            // Insert new post before the form
+            postContainer.insertBefore(newPost, postContainer.querySelector('.post-form'));
+
+            // Clear inputs
+            usernameInput.value = '';
+            commentInput.value = '';
+
+            // Save post to localStorage (for demo purposes)
+            savePost(courseId, username, comment);
+        }
+
+        // Save post to localStorage
+        function savePost(courseId, username, comment) {
+            const posts = JSON.parse(localStorage.getItem(`posts-alevel-${courseId}`) || '[]');
+            posts.push({ username, comment });
+            localStorage.setItem(`posts-alevel-${courseId}`, JSON.stringify(posts));
+        }
+
+        // Load saved posts from localStorage on page load
+        function loadPosts() {
+            for (let i = 1; i <= 11; i++) {
+                const posts = JSON.parse(localStorage.getItem(`posts-alevel-${i}`) || '[]');
+                const postContainer = document.querySelector(`#username-${i}`).parentElement;
+                posts.forEach(post => {
+                    const newPost = document.createElement('div');
+                    newPost.className = 'post';
+                    newPost.innerHTML = `
+                        <div class="post-header">${post.username}</div>
+                        <div class="post-body">${post.comment}</div>
+                    `;
+                    postContainer.insertBefore(newPost, postContainer.querySelector('.post-form'));
+                });
+            }
+        }
+
+        // Load posts when page loads
+        window.onload = loadPosts;
+    </script>
+</body>
+</html>
