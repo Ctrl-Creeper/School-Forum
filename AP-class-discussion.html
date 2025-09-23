@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AP & Honors Courses Discussion Forum</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        .course-section {
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .course-header {
+            background-color: #27ae60;
+            color: white;
+            padding: 15px;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .course-content {
+            display: none;
+            padding: 15px;
+            background-color: white;
+        }
+        .course-content.show {
+            display: block;
+        }
+        .post {
+            border-bottom: 1px solid #eee;
+            padding: 10px 0;
+        }
+        .post:last-child {
+            border-bottom: none;
+        }
+        .post-header {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .post-body {
+            margin-top: 5px;
+            color: #555;
+        }
+        .post-form {
+            margin-top: 15px;
+        }
+        .post-form textarea {
+            width: 100%;
+            height: 80px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            resize: vertical;
+        }
+        .post-form input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .post-form button {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .post-form button:hover {
+            background-color: #219653;
+        }
+        .guidelines {
+            background-color: #e8f8e4;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 600px) {
+            .course-header {
+                font-size: 16px;
+            }
+            .post-form textarea, .post-form input[type="text"] {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>AP & Honors Courses Discussion Forum</h1>
+    <div class="guidelines">
+        <p><strong>Welcome to the AP & Honors Courses Discussion Forum!</strong> This is a space for students to share experiences about AP, Honors, and related courses. Discuss teacher grading styles, course difficulty, workload, or tips for success. <strong>Rules:</strong> Keep it respectful—no personal attacks on teachers or students. Posts are moderated.</p>
+    </div>
+
+    <!-- Course Sections -->
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            1. AP English Language & Composition (Lang)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post">
+                <div class="post-header">RhetoricRocks (Junior)</div>
+                <div class="post-body">AP Lang is essay-heavy—focus on rhetorical analysis. Ms. Carter grades fairly but expects strong arguments. Difficulty: 6/10. Tip: Practice FRQs for a 4-5 score.</div>
+            </div>
+            <div class="post-form">
+                <input type="text" id="username-1" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-1" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(1)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            2. AP English Literature & Composition (Lit)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post">
+                <div class="post-header">LitLover2025 (Senior)</div>
+                <div class="post-body">AP Lit is tough with deep text analysis. Mr. Evans loves creative interpretations but marks strictly on essays. Workload: 8 hours/week. Aim for 5 with past papers.</div>
+            </div>
+            <div class="post-form">
+                <input type="text" id="username-2" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-2" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(2)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            3. English 11 Honors
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-3" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-3" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(3)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            4. English 12 Honors
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-4" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-4" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(4)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            5. AP Statistics (统计)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post">
+                <div class="post-header">StatsStar (Junior)</div>
+                <div class="post-body">AP Stats is manageable if you like data. Ms. Kim’s tests are tough but fair; focus on probability and inference. Difficulty: 5/10. Workload: 6 hours/week.</div>
+            </div>
+            <div class="post-form">
+                <input type="text" id="username-5" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-5" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(5)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            6. AP Calculus BC
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post">
+                <div class="post-header">CalcCrusader (Senior)</div>
+                <div class="post-body">BC is intense—covers AB plus series, vectors. Mr. Patel grades strictly but curves exams. Difficulty: 8/10. Tip: Khan Academy for practice.</div>
+            </div>
+            <div class="post-form">
+                <input type="text" id="username-6" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-6" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(6)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            7. Calculus III (Cal3)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-7" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-7" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(7)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            8. Probability Theory (概率论)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-8" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-8" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(8)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            9. Differential Equations
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-9" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-9" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(9)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            10. AP Microeconomics (微经)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-10" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-10" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(10)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            11. AP Micro/Macroeconomics (双经)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-11" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-11" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(11)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            12. Advanced Economics (12 only)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-12" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-12" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(12)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            13. AP Psychology (心理)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post">
+                <div class="post-header">PsychSavvy (Junior)</div>
+                <div class="post-body">AP Psych is vocab-heavy but fascinating. Ms. Lopez gives fair tests; memorize key terms for a 5. Difficulty: 4/10. Workload: 5 hours/week.</div>
+            </div>
+            <div class="post-form">
+                <input type="text" id="username-13" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-13" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(13)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            14. Developmental Psychology Seminar (12 only)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-14" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-14" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(14)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            15. Political Science and Law (Poli-Sci)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-15" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-15" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(15)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            16. AP Environmental Science (环科)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-16" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-16" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(16)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            17. Sociology (社会学)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-17" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-17" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(17)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            18. AP Chemistry
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-18" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-18" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(18)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            19. Organic Chemistry
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-19" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-19" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(19)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            20. AP Physics 1 (物理1)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-20" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-20" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(20)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            21. AP Physics 2 (物理2)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-21" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-21" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(21)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            22. AP Physics C: Mechanics
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-22" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-22" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(22)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            23. AP Physics C: Mechanics & Electricity/Magnetism (双C)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-23" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-23" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(23)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            24. Advanced Physics (12 only)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-24" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-24" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(24)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            25. AP Biology (AP Bio)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-25" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-25" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(25)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            26. Biology Honors
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-26" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-26" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(26)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            27. Biology Regular
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-27" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-27" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(27)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            28. Marine Biology
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-28" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-28" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(28)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            29. Neurophysiology
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-29" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-29" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(29)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            30. French 1, 2
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-30" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-30" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(30)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            31. AP French
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-31" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-31" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(31)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            32. Spanish 1, 2, 3
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-32" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-32" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(32)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            33. AP Spanish
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-33" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-33" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(33)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            34. German
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-34" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-34" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(34)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            35. Japanese
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-35" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-35" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(35)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            36. Russian
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-36" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-36" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(36)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            37. Korean
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-37" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-37" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(37)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            38. Guitar 1, 2
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-38" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-38" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(38)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            39. Advanced Guitar
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-39" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-39" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(39)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            40. AP Music Theory (乐理)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-40" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-40" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(40)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            41. Vocal Ensemble
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-41" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-41" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(41)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            42. Instrumental Ensemble II
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-42" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-42" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(42)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            43. Drama
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-43" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-43" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(43)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            44. Independent Film Production
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-44" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-44" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(44)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            45. Visual Art
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-45" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-45" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(45)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            46. AP 2D Art and Design & Drawing
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-46" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-46" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(46)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            47. AP 3D Art and Design
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-47" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-47" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(47)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            48. Dance
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-48" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-48" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(48)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            49. Speech & Debate
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-49" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-49" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(49)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            50. AP Computer Science A (CSA)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post">
+                <div class="post-header">CodeMaster2025 (Senior)</div>
+                <div class="post-body">CSA is coding-intensive—Java is tough if you're new. Mr. Chen’s tests mimic AP style; practice FRQs for a 5. Difficulty: 7/10. Workload: 8 hours/week.</div>
+            </div>
+            <div class="post-form">
+                <input type="text" id="username-50" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-50" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(50)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            51. AP Computer Science Principles (CSP)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-51" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-51" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(51)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            52. Graphic Programming in Java (Advanced CS)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-52" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-52" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(52)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            53. AP Seminar
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-53" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-53" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(53)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            54. AP Research
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-54" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-54" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(54)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle course section visibility
+        function toggleSection(header) {
+            const content = header.nextElementSibling;
+            const arrow = header.querySelector('span');
+            content.classList.toggle('show');
+            arrow.textContent = content.classList.contains('show') ? '▲' : '▼';
+        }
+
+        // Submit post and append to course section
+        function submitPost(courseId) {
+            const usernameInput = document.getElementById(`username-${courseId}`);
+            const commentInput = document.getElementById(`comment-${courseId}`);
+            const username = usernameInput.value.trim() || 'Anonymous';
+            const comment = commentInput.value.trim();
+
+            if (!comment) {
+                alert('Please enter a comment.');
+                return;
+            }
+
+            const postContainer = document.querySelector(`#username-${courseId}`).parentElement;
+            const newPost = document.createElement('div');
+            newPost.className = 'post';
+            newPost.innerHTML = `
+                <div class="post-header">${username}</div>
+                <div class="post-body">${comment}</div>
+            `;
+
+            // Insert new post before the form
+            postContainer.insertBefore(newPost, postContainer.querySelector('.post-form'));
+
+            // Clear inputs
+            usernameInput.value = '';
+            commentInput.value = '';
+
+            // Save post to localStorage (for demo purposes)
+            savePost(courseId, username, comment);
+        }
+
+        // Save post to localStorage
+        function savePost(courseId, username, comment) {
+            const posts = JSON.parse(localStorage.getItem(`posts-ap-${courseId}`) || '[]');
+            posts.push({ username, comment });
+            localStorage.setItem(`posts-ap-${courseId}`, JSON.stringify(posts));
+        }
+
+        // Load saved posts from localStorage on page load
+        function loadPosts() {
+            for (let i = 1; i <= 54; i++) {
+                const posts = JSON.parse(localStorage.getItem(`posts-ap-${i}`) || '[]');
+                const postContainer = document.querySelector(`#username-${i}`).parentElement;
+                posts.forEach(post => {
+                    const newPost = document.createElement('div');
+                    newPost.className = 'post';
+                    newPost.innerHTML = `
+                        <div class="post-header">${post.username}</div>
+                        <div class="post-body">${post.comment}</div>
+                    `;
+                    postContainer.insertBefore(newPost, postContainer.querySelector('.post-form'));
+                });
+            }
+        }
+
+        // Load posts when page loads
+        window.onload = loadPosts;
+    </script>
+</body>
+</html>
