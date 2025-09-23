@@ -5,7 +5,7 @@ from app.utils.config import config
 
 @contextmanager
 def get_db_connection():
-    conn = sqlite3.connect(config["DATABASE"])
+    conn = sqlite3.connect(config["USER_DB"])
     conn.row_factory = sqlite3.Row
     try:
         yield conn
