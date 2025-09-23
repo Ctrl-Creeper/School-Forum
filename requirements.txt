@@ -5,3 +5,4 @@ redis>=5.0.0
 PyYAML>=6.0
 Werkzeug>=3.0.0
 MarkupSafe>=2.1.0
+waitress==3.0.2

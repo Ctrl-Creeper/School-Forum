@@ -2,7 +2,6 @@
 from flask import Blueprint, jsonify
 from datetime import datetime, timezone
 from app.utils.config import config
-import redis
 
 health_bp = Blueprint("health", __name__)
 
