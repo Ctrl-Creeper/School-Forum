@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IB Courses Discussion Forum</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        .course-section {
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .course-header {
+            background-color: #3498db;
+            color: white;
+            padding: 15px;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .course-content {
+            display: none;
+            padding: 15px;
+            background-color: white;
+        }
+        .course-content.show {
+            display: block;
+        }
+        .post {
+            border-bottom: 1px solid #eee;
+            padding: 10px 0;
+        }
+        .post:last-child {
+            border-bottom: none;
+        }
+        .post-header {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .post-body {
+            margin-top: 5px;
+            color: #555;
+        }
+        .post-form {
+            margin-top: 15px;
+        }
+        .post-form textarea {
+            width: 100%;
+            height: 80px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            resize: vertical;
+        }
+        .post-form input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .post-form button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .post-form button:hover {
+            background-color: #2980b9;
+        }
+        .guidelines {
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 600px) {
+            .course-header {
+                font-size: 16px;
+            }
+            .post-form textarea, .post-form input[type="text"] {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>IB Courses Discussion Forum</h1>
+    <div class="guidelines">
+        <p><strong>Welcome to the IB Courses Discussion Forum!</strong> This is a space for students to share experiences about IB Diploma Programme courses. Discuss teacher grading styles, course difficulty, workload, or tips for success. <strong>Rules:</strong> Keep it respectful—no personal attacks on teachers or students. Posts are moderated.</p>
+    </div>
+
+    <!-- Course Sections -->
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            1. Math Analysis and Approaches (AA) HL/SL (数学AA HL/SL)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post">
+                <div class="post-header">MathWhiz2024 (Senior)</div>
+                <div class="post-body">AA HL is tough if you're not a math person—lots of proofs and calculus. SL is more manageable for those wanting basics. Mr. Johnson grades fairly but expects detailed workings; average scores around 5-6. Tips: Practice past papers religiously!</div>
+            </div>
+            <div class="post">
+                <div class="post-header">CalcStruggler (Junior)</div>
+                <div class="post-body">Agreed on HL difficulty—it's like uni level. But Ms. Lee's SL class is chill; she gives partial credit generously.</div>
+            </div>
+            <div class="post">
+                <div class="post-header">Anonymous</div>
+                <div class="post-body">HL workload is insane, 10+ hours/week. Predicted 7 if you grind.</div>
+            </div>
+            <div class="post-form">
+                <input type="text" id="username-1" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-1" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(1)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            2. Math Applications and Interpretation (AI) HL/SL (数学AI HL/SL)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post">
+                <div class="post-header">StatsFan (Senior)</div>
+                <div class="post-body">AI focuses on real-world apps like stats and modeling. HL is challenging with tech tools, but SL is straightforward. Dr. Patel grades based on IA quality—easy 6s if you use Desmos well.</div>
+            </div>
+            <div class="post">
+                <div class="post-header">AppInterpreter (Junior)</div>
+                <div class="post-body">SL is perfect for non-STEM majors. Difficulty: 4/10. Ms. Kim is strict on exams but helpful in class.</div>
+            </div>
+            <div class="post">
+                <div class="post-header">HLHustler</div>
+                <div class="post-body">HL ramps up with advanced stats; expect 7-8 hours/week. Grading is consistent, no curves.</div>
+            </div>
+            <div class="post-form">
+                <input type="text" id="username-2" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-2" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(2)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            3. Chinese A HL/SL (语文A HL/SL)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post">
+                <div class="post-header">LitLoverCN (Senior)</div>
+                <div class="post-body">HL dives deep into classical texts and essays—high difficulty for non-natives. SL is more balanced. Mr. Wang grades holistically; loves creative interpretations, averages 5-6.</div>
+            </div>
+            <div class="post-form">
+                <input type="text" id="username-3" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-3" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(3)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            4. English A HL/SL (英语A HL/SL)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-4" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-4" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(4)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            5. English B HL (英语B HL)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-5" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-5" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(5)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            6. Spanish B SL (西班牙语B SL)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-6" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-6" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(6)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            7. Environmental Systems Science HL/SL (环境科学 HL/SL)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-7" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-7" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(7)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            8. Economics HL/SL (经济)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-8" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-8" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(8)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            9. Business Management HL/SL (商业管理)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-9" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-9" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(9)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            10. Psychology HL/SL (心理)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-10" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-10" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(10)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            11. Computer Science HL/SL (计算机科学)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-11" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-11" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(11)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            12. Physics HL/SL (物理)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-12" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-12" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(12)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            13. Chemistry HL/SL (化学)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-13" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-13" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(13)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            14. Biology HL/SL (生物)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-14" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-14" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(14)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            15. Visual Art HL/SL (视觉艺术)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-15" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-15" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(15)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            16. Film HL/SL (电影)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-16" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-16" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(16)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="course-section">
+        <div class="course-header" onclick="toggleSection(this)">
+            17. Music HL/SL (音乐)
+            <span>▼</span>
+        </div>
+        <div class="course-content">
+            <div class="post-form">
+                <input type="text" id="username-17" placeholder="Your Username (e.g., Student2025 or Anonymous)">
+                <textarea id="comment-17" placeholder="Share your thoughts..."></textarea>
+                <button onclick="submitPost(17)">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle course section visibility
+        function toggleSection(header) {
+            const content = header.nextElementSibling;
+            const arrow = header.querySelector('span');
+            content.classList.toggle('show');
+            arrow.textContent = content.classList.contains('show') ? '▲' : '▼';
+        }
+
+        // Submit post and append to course section
+        function submitPost(courseId) {
+            const usernameInput = document.getElementById(`username-${courseId}`);
+            const commentInput = document.getElementById(`comment-${courseId}`);
+            const username = usernameInput.value.trim() || 'Anonymous';
+            const comment = commentInput.value.trim();
+
+            if (!comment) {
+                alert('Please enter a comment.');
+                return;
+            }
+
+            const postContainer = document.querySelector(`#username-${courseId}`).parentElement;
+            const newPost = document.createElement('div');
+            newPost.className = 'post';
+            newPost.innerHTML = `
+                <div class="post-header">${username}</div>
+                <div class="post-body">${comment}</div>
+            `;
+
+            // Insert new post before the form
+            postContainer.insertBefore(newPost, postContainer.querySelector('.post-form'));
+
+            // Clear inputs
+            usernameInput.value = '';
+            commentInput.value = '';
+
+            // Save post to localStorage (for demo purposes)
+            savePost(courseId, username, comment);
+        }
+
+        // Save post to localStorage
+        function savePost(courseId, username, comment) {
+            const posts = JSON.parse(localStorage.getItem(`posts-${courseId}`) || '[]');
+            posts.push({ username, comment });
+            localStorage.setItem(`posts-${courseId}`, JSON.stringify(posts));
+        }
+
+        // Load saved posts from localStorage on page load
+        function loadPosts() {
+            for (let i = 1; i <= 17; i++) {
+                const posts = JSON.parse(localStorage.getItem(`posts-${i}`) || '[]');
+                const postContainer = document.querySelector(`#username-${i}`).parentElement;
+                posts.forEach(post => {
+                    const newPost = document.createElement('div');
+                    newPost.className = 'post';
+                    newPost.innerHTML = `
+                        <div class="post-header">${post.username}</div>
+                        <div class="post-body">${post.comment}</div>
+                    `;
+                    postContainer.insertBefore(newPost, postContainer.querySelector('.post-form'));
+                });
+            }
+        }
+
+        // Load posts when page loads
+        window.onload = loadPosts;
+    </script>
+</body>
+</html>

@@ -7,6 +7,7 @@ from app.routes.forget import forget_bp
 from app.routes.health import health_bp
 from app.utils.config import config
 import waitress
+from app.auth import auth_bp
 
 # 注册所有 Blueprint
 app.register_blueprint(register_bp)
@@ -14,6 +15,8 @@ app.register_blueprint(login_bp)
 app.register_blueprint(logout_bp)
 app.register_blueprint(forget_bp)
 app.register_blueprint(health_bp)
+app.register_blueprint(auth_bp)
+
 
 
 if __name__ == "__main__":
