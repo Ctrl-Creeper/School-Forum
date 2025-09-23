@@ -1,0 +1,2306 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>算个卦叭～</title>
+  <style>
+    :root {
+      --mint-green: #a8e6cf;
+      --light-mint: #dcedc1;
+      --pale-green: #e8f5e9;
+      --soft-teal: #80cbc4;
+      --dark-teal: #00897b;
+      --text-dark: #263238;
+      --text-medium: #455a64;
+      --shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    body {
+      font-family: "Noto Serif SC", "宋体", serif;
+      background: linear-gradient(135deg, var(--pale-green), var(--light-mint));
+      text-align: center;
+      padding: 20px;
+      color: var(--text-dark);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255,255,255,0.3);
+      position: relative;
+    }
+    
+    h1 {
+      color: var(--dark-teal);
+      margin-bottom: 30px;
+      font-weight: 700;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+      position: relative;
+      padding-bottom: 15px;
+    }
+    
+    h1:after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--mint-green), var(--dark-teal));
+      border-radius: 3px;
+    }
+    
+    .yao {
+      font-size: 24px;
+      margin: 8px 0;
+      padding: 8px;
+      background-color: rgba(168, 230, 207, 0.2);
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    
+    .yao:hover {
+      background-color: rgba(168, 230, 207, 0.4);
+      transform: translateY(-2px);
+    }
+    
+    .yang { 
+      color: #e53935;
+      font-weight: bold;
+    }
+    
+    .yin { 
+      color: var(--dark-teal);
+      font-weight: bold;
+    }
+    
+    button {
+      font-size: 18px;
+      padding: 12px 28px;
+      margin: 25px auto;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--mint-green), var(--soft-teal));
+      border: none;
+      border-radius: 50px;
+      color: var(--text-dark);
+      font-weight: 600;
+      box-shadow: var(--shadow);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+      background: linear-gradient(135deg, var(--soft-teal), var(--mint-green));
+    }
+    
+    button:active {
+      transform: translateY(1px);
+    }
+    
+    .svg-box {
+      display: inline-block;
+      margin: 15px;
+      padding: 15px;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      transition: all 0.3s ease;
+    }
+    
+    .svg-box:hover {
+      transform: scale(1.05);
+    }
+    
+    .gua-container {
+      margin-top: 30px;
+      padding: 20px;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+    }
+    
+    .gua-header {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 15px;
+      color: var(--dark-teal);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    
+    .gua-content {
+      text-align: left;
+      padding: 0 15px;
+    }
+    
+    .shangshang {
+      color: #d32f2f;
+      background-color: rgba(211, 47, 47, 0.1);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+    
+    .zhongshang {
+      color: #fb8c00;
+      background-color: rgba(251, 140, 0, 0.1);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+    
+    .zhongxia {
+      color: #7b1fa2;
+      background-color: rgba(123, 31, 162, 0.1);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+    
+    .xiaxia {
+      color: #455a64;
+      background-color: rgba(69, 90, 100, 0.1);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+    
+    hr {
+      border: none;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--soft-teal), transparent);
+      margin: 25px 0;
+    }
+    
+    .gua-name {
+      font-size: 24px;
+      font-weight: bold;
+      margin: 15px 0;
+      color: var(--dark-teal);
+    }
+    
+    .bagua-name {
+      font-size: 18px;
+      color: var(--text-medium);
+      margin-top: 5px;
+    }
+    
+    .yao-change {
+      font-size: 14px;
+      color: #e53935;
+      font-style: italic;
+    }
+    
+    .language-selector {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      padding: 8px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--soft-teal);
+      background-color: white;
+      color: var(--text-dark);
+      font-family: "Noto Serif SC", serif;
+      cursor: pointer;
+      outline: none;
+    }
+    
+    .language-selector:focus {
+      box-shadow: 0 0 0 2px rgba(128, 203, 196, 0.3);
+    }
+    
+    @media (max-width: 600px) {
+      .container {
+        padding: 15px;
+      }
+      
+      h1 {
+        font-size: 24px;
+      }
+      
+      .yao {
+        font-size: 20px;
+      }
+      
+      .language-selector {
+        position: relative;
+        top: 0;
+        right: 0;
+        margin-bottom: 15px;
+      }
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <h1 id="title">算个卦叭～</h1>
+    <select class="language-selector" id="languageSelector" onchange="changeLanguage()">
+      <option value="zh">中文</option>
+      <option value="en">English</option>
+      <option value="ja">日本語</option>
+      <option value="ko">한국어</option>
+    </select>
+    <button onclick="shakeGua()" id="shakeButton">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2V6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <path d="M12 18V22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <path d="M4.92999 4.92999L7.75999 7.75999" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <path d="M16.24 16.24L19.07 19.07" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <path d="M2 12H6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <path d="M18 12H22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <path d="M4.92999 19.07L7.75999 16.24" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <path d="M16.24 7.75999L19.07 4.92999" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <span id="shakeText">摇卦</span>
+    </button>
+    <div id="gua"></div>
+  </div>
+
+  <script>
+    // 当前语言设置
+    let currentLanguage = 'zh';
+    
+    // 多语言文本
+    const translations = {
+      zh: {
+        title: "算个卦叭～",
+        shakeButton: "摇卦",
+        sixYao: "六爻",
+        originalGua: "本卦",
+        changedGua: "之卦",
+        guaExplanation: "卦辞",
+        yaoExplanation: "爻辞",
+        upperGua: "上卦",
+        lowerGua: "下卦",
+        changingLine: "(变爻)",
+        level: {
+          shangshang: "大吉",
+          zhongshang: "中吉",
+          zhongxia: "小凶",
+          xiaxia: "大凶"
+        }
+      },
+      en: {
+        title: "I Ching Divination",
+        shakeButton: "Cast Hexagram",
+        sixYao: "Six Lines",
+        originalGua: "Original Hexagram",
+        changedGua: "Changed Hexagram",
+        guaExplanation: "Hexagram Statement",
+        yaoExplanation: "Line Statements",
+        upperGua: "Upper Trigram",
+        lowerGua: "Lower Trigram",
+        changingLine: "(Changing Line)",
+        level: {
+          shangshang: "Supreme Luck",
+          zhongshang: "Good Luck",
+          zhongxia: "Average Luck",
+          xiaxia: "Bad Luck"
+        }
+      },
+      ja: {
+        title: "易経占い",
+        shakeButton: "占う",
+        sixYao: "六爻",
+        originalGua: "本卦",
+        changedGua: "変卦",
+        guaExplanation: "卦辞",
+        yaoExplanation: "爻辞",
+        upperGua: "上卦",
+        lowerGua: "下卦",
+        changingLine: "(変爻)",
+        level: {
+          shangshang: "大吉",
+          zhongshang: "中吉",
+          zhongxia: "小凶",
+          xiaxia: "大凶"
+        }
+      },
+      ko: {
+        title: "주역 점",
+        shakeButton: "점 치기",
+        sixYao: "육효",
+        originalGua: "본괘",
+        changedGua: "변괘",
+        guaExplanation: "괘사",
+        yaoExplanation: "효사",
+        upperGua: "상괘",
+        lowerGua: "하괘",
+        changingLine: "(변효)",
+        level: {
+          shangshang: "상상길",
+          zhongshang: "중길",
+          zhongxia: "중흉",
+          xiaxia: "대흉"
+        }
+      }
+    };
+
+    // 多语言卦名
+    const guaTranslations = {
+  en: {
+    "乾为天": "The Creative",
+    "坤为地": "The Receptive",
+    "水雷屯": "Difficulty at the Beginning",
+    "山水蒙": "Youthful Folly",
+    "水天需": "Waiting",
+    "天水讼": "Conflict",
+    "地水师": "The Army",
+    "水地比": "Holding Together",
+    "风天小畜": "Small Taming",
+    "天泽履": "Treading",
+    "地天泰": "Peace",
+    "天地否": "Stagnation",
+    "天火同人": "Fellowship with Men",
+    "火天大有": "Great Possession",
+    "地山谦": "Modesty",
+    "雷地豫": "Enthusiasm",
+    "泽雷随": "Following",
+    "山风蛊": "Work on the Decayed",
+    "地泽临": "Approach",
+    "风地观": "Contemplation",
+    "火雷噬嗑": "Biting Through",
+    "山火贲": "Grace",
+    "山地剥": "Splitting Apart",
+    "地雷复": "Return",
+    "天雷无妄": "Innocence",
+    "山天大畜": "Great Taming",
+    "山雷颐": "Nourishment",
+    "泽风大过": "Preponderance of the Great",
+    "坎为水": "The Abysmal",
+    "离为火": "The Clinging",
+    "泽山咸": "Influence",
+    "雷风恒": "Duration",
+    "天山遁": "Retreat",
+    "雷天大壮": "Great Power",
+    "火地晋": "Progress",
+    "地火明夷": "Darkening of the Light",
+    "风火家人": "The Family",
+    "火泽睽": "Opposition",
+    "水山蹇": "Obstruction",
+    "雷水解": "Deliverance",
+    "山泽损": "Decrease",
+    "风雷益": "Increase",
+    "泽天夬": "Breakthrough",
+    "天风姤": "Coming to Meet",
+    "泽地萃": "Gathering Together",
+    "地风升": "Pushing Upward",
+    "泽火革": "Revolution",
+    "火风鼎": "The Cauldron",
+    "震为雷": "The Arousing",
+    "艮为山": "Keeping Still",
+    "风山渐": "Development",
+    "雷泽归妹": "The Marrying Maiden",
+    "雷火丰": "Abundance",
+    "火山旅": "The Wanderer",
+    "巽为风": "The Gentle",
+    "兑为泽": "The Joyous",
+    "风水涣": "Dispersion",
+    "水泽节": "Limitation",
+    "风泽中孚": "Inner Truth",
+    "雷山小过": "Preponderance of the Small",
+    "水火既济": "After Completion",
+    "火水未济": "Before Completion",
+  },
+  ja: {
+    "乾为天": "乾",
+    "坤为地": "坤",
+    "水雷屯": "屯",
+    "山水蒙": "蒙",
+    "水天需": "需",
+    "天水讼": "訟",
+    "地水师": "師",
+    "水地比": "比",
+    "风天小畜": "小畜",
+    "天泽履": "履",
+    "地天泰": "泰",
+    "天地否": "否",
+    "天火同人": "同人",
+    "火天大有": "大有",
+    "地山谦": "謙",
+    "雷地豫": "豫",
+    "泽雷随": "随",
+    "山风蛊": "蠱",
+    "地泽临": "臨",
+    "风地观": "観",
+    "火雷噬嗑": "噬嗑",
+    "山火贲": "賁",
+    "山地剥": "剥",
+    "地雷复": "復",
+    "天雷无妄": "无妄",
+    "山天大畜": "大畜",
+    "山雷颐": "頤",
+    "泽风大过": "大過",
+    "坎为水": "坎",
+    "离为火": "離",
+    "泽山咸": "咸",
+    "雷风恒": "恒",
+    "天山遁": "遁",
+    "雷天大壮": "大壮",
+    "火地晋": "晋",
+    "地火明夷": "明夷",
+    "风火家人": "家人",
+    "火泽睽": "睽",
+    "水山蹇": "蹇",
+    "雷水解": "解",
+    "山泽损": "損",
+    "风雷益": "益",
+    "泽天夬": "夬",
+    "天风姤": "姤",
+    "泽地萃": "萃",
+    "地风升": "升",
+    "泽火革": "革",
+    "火风鼎": "鼎",
+    "震为雷": "震",
+    "艮为山": "艮",
+    "风山渐": "漸",
+    "雷泽归妹": "帰妹",
+    "雷火丰": "豊",
+    "火山旅": "旅",
+    "巽为风": "巽",
+    "兑为泽": "兌",
+    "风水涣": "渙",
+    "水泽节": "節",
+    "风泽中孚": "中孚",
+    "雷山小过": "小過",
+    "水火既济": "既済",
+    "火水未济": "未済",
+  },
+  ko: {
+    "乾为天": "건",
+    "坤为地": "곤",
+    "水雷屯": "둔",
+    "山水蒙": "몽",
+    "水天需": "수",
+    "天水讼": "송",
+    "地水师": "사",
+    "水地比": "비",
+    "风天小畜": "소축",
+    "天泽履": "리",
+    "地天泰": "태",
+    "天地否": "비",
+    "天火同人": "동인",
+    "火天大有": "대유",
+    "地山谦": "겸",
+    "雷地豫": "예",
+    "泽雷随": "수",
+    "山风蛊": "고",
+    "地泽临": "임",
+    "风地观": "관",
+    "火雷噬嗑": "서합",
+    "山火贲": "비",
+    "山地剥": "박",
+    "地雷复": "복",
+    "天雷无妄": "무망",
+    "山天大畜": "대축",
+    "山雷颐": "이",
+    "泽风大过": "대과",
+    "坎为水": "감",
+    "离为火": "리",
+    "泽山咸": "함",
+    "雷风恒": "항",
+    "天山遁": "돈",
+    "雷天大壮": "대장",
+    "火地晋": "진",
+    "地火明夷": "명이",
+    "风火家人": "가인",
+    "火泽睽": "규",
+    "水山蹇": "건",
+    "雷水解": "해",
+    "山泽损": "손",
+    "风雷益": "익",
+    "泽天夬": "쾌",
+    "天风姤": "구",
+    "泽地萃": "췌",
+    "地风升": "승",
+    "泽火革": "혁",
+    "火风鼎": "정",
+    "震为雷": "진",
+    "艮为山": "간",
+    "风山渐": "점",
+    "雷泽归妹": "귀매",
+    "雷火丰": "풍",
+    "火山旅": "려",
+    "巽为风": "손",
+    "兑为泽": "태",
+    "风水涣": "환",
+    "水泽节": "절",
+    "风泽中孚": "중부",
+    "雷山小过": "소과",
+    "水火既济": "기제",
+    "火水未济": "미제",
+  },
+};
+
+    // 多语言卦辞解释
+    const guaExplanations = {
+  "乾为天": {
+    "zh": {
+      "level": "大吉",
+      "guaci": "元，亨，利，贞。",
+      "yaoci": [
+        "初九：潜龙，勿用。",
+        "九二：见龙在田，利见大人。",
+        "九三：君子终日乾乾，夕惕若厉，无咎。",
+        "九四：或跃在渊，无咎。",
+        "九五：飞龙在天，利见大人。",
+        "上九：亢龙，有悔。"
+      ]
+    },
+    "en": {
+      "level": "Supreme Luck",
+      "guaci": "The Creative: Originating, penetrating, advantageous, steadfast.",
+      "yaoci": [
+        "Nine at the beginning: Hidden dragon. Do not act.",
+        "Nine in the second place: A dragon appears in the field. It is advantageous to see a great man.",
+        "Nine in the third place: The superior man works diligently throughout the day, remaining vigilant in the evening, without fault.",
+        "Nine in the fourth place: Perhaps leaping in the abyss. No fault.",
+        "Nine in the fifth place: A flying dragon in the sky. It is advantageous to see a great man.",
+        "Nine at the top: The dragon is exalted. There is regret."
+      ]
+    },
+    "ja": {
+      "level": "大吉",
+      "guaci": "乾：元、亨、利、貞。",
+      "yaoci": [
+        "初九：潜龍、勿用。",
+        "九二：見龍在田、利見大人。",
+        "九三：君子終日乾乾、夕惕若厲、無咎。",
+        "九四：或躍在淵、無咎。",
+        "九五：飛龍在天、利見大人。",
+        "上九：亢龍、有悔。"
+      ]
+    },
+    "ko": {
+      "level": "상상길",
+      "guaci": "건: 원, 형, 이, 정.",
+      "yaoci": [
+        "초구: 잠룡, 무용.",
+        "구이: 용이 들판에 나타나니, 대인을 만나면 이롭다.",
+        "구삼: 군자는 종일 힘쓰고, 저녁에는 경계하여 허물이 없다.",
+        "구사: 연못에서 뛰어오르니, 허물이 없다.",
+        "구오: 하늘에 나는 용, 대인을 만나면 이롭다.",
+        "상구: 용이 지나치게 높이 오르니, 후회가 있다."
+      ]
+    }
+  },
+  "坤为地": {
+    "zh": {
+      "level": "大吉",
+      "guaci": "元，亨，利，牝马之贞。",
+      "yaoci": [
+        "初六：履霜，坚冰至。",
+        "六二：直方大，不习无不利。",
+        "六三：含章可贞。或从王事，无成有终。",
+        "六四：括囊，无咎无誉。",
+        "六五：黄裳，元吉。",
+        "上六：龙战于野，其血玄黄。"
+      ]
+    },
+    "en": {
+      "level": "Supreme Luck",
+      "guaci": "The Receptive: Originating, penetrating, advantageous, steadfast like a mare.",
+      "yaoci": [
+        "Six at the beginning: Treading on frost. Solid ice will come.",
+        "Six in the second place: Straight, square, great. Without purpose, yet nothing remains unfurthered.",
+        "Six in the third place: Containing the signs, one may be steadfast. If you follow the king's business, without claiming success, you will have a conclusion.",
+        "Six in the fourth place: A tied-up sack. No blame, no praise.",
+        "Six in the fifth place: A yellow lower garment. Supreme good fortune.",
+        "Six at the top: Dragons fight in the meadow. Their blood is black and yellow."
+      ]
+    },
+    "ja": {
+      "level": "大吉",
+      "guaci": "坤：元、亨、利、牝馬の貞。",
+      "yaoci": [
+        "初六：霜を履みて堅冰至る。",
+        "六二：直く方く大なり、習わずして不利なし。",
+        "六三：章を含みて貞うべし。或は王事に従い、成ることなくして終わり有り。",
+        "六四：囊を括れば、咎なく誉れなし。",
+        "六五：黄裳、元吉。",
+        "上六：野に龍戦う、その血玄黄。"
+      ]
+    },
+    "ko": {
+      "level": "상상길",
+      "guaci": "곤: 원, 형, 이, 암말의 정.",
+      "yaoci": [
+        "초육: 서리를 밟으니, 단단한 얼음이 온다.",
+        "육이: 곧고 방정하고 크니, 익히지 않아도 불리함이 없다.",
+        "육삼: 아름다움을 간직하면 정해질 수 있다. 왕의 일을 따르나 성취는 없어도 끝이 있다.",
+        "육사: 주머니를 묶으면 허물도 없고 칭찬도 없다.",
+        "육오: 노란 치마, 크게 길하다.",
+        "상육: 들판에서 용이 싸우니, 그 피는 검고 누렇다."
+      ]
+    }
+  },
+  "水雷屯": {
+    "zh": {
+      "level": "中吉",
+      "guaci": "元亨利贞，勿用有攸往。利建侯。",
+      "yaoci": [
+        "初九：磐桓，利居贞，利建侯。",
+        "六二：屯如，邅如，乘马班如。匪寇，婚媾。女子贞不字，十年乃字。",
+        "六三：即鹿无虞，惟入于林中。君子几，不如舍，往吝。",
+        "六四：乘马班如，求婚媾。往吉，无不利。",
+        "九五：屯其膏，小贞吉，大贞凶。",
+        "上六：乘马班如，泣血涟如。"
+      ]
+    },
+    "en": {
+      "level": "Moderate Luck",
+      "guaci": "Difficulty at the Beginning: Originating, penetrating, advantageous, steadfast. Do not undertake ventures. Favorable to establish feudal lords.",
+      "yaoci": [
+        "Nine at the beginning: Hesitation. Advantageous to remain steadfast and to establish a noble position.",
+        "Six in the second place: Obstacles and delay. Riding a horse in retreat. Not a robber, but marriage. A girl remains chaste and does not marry; after ten years, she marries.",
+        "Six in the third place: Hunting deer without a guide. Entering the forest. The superior man sees the danger. Better to stop. Going brings disgrace.",
+        "Six in the fourth place: Riding a horse in retreat. Seeking marriage, auspicious. Nothing is unfavorable.",
+        "Nine in the fifth place: Difficulty in abundance. Small steadfastness is auspicious. Great steadfastness brings misfortune.",
+        "Six at the top: Riding a horse in retreat, tears of blood flow."
+      ]
+    },
+    "ja": {
+      "level": "中吉",
+      "guaci": "屯：元亨利貞。往く所あるに用うる勿れ。侯を建つるに利あり。",
+      "yaoci": [
+        "初九：磐桓、貞に居るに利あり、侯を建つるに利あり。",
+        "六二：屯の如く、邅の如く、馬に乗り班るの如し。寇に匪ず、婚媾。女子貞にして字せず、十年にして乃ち字す。",
+        "六三：鹿に即くも虞無く、惟だ林中に入る。君子幾し。舍くに如かず。往けば吝なり。",
+        "六四：馬に乗り班るの如し。婚媾を求む。往けば吉、利あらざる無し。",
+        "九五：其の膏に屯す。小貞は吉、大貞は凶。",
+        "上六：馬に乗り班るの如く、血を泣きて涟の如し。"
+      ]
+    },
+    "ko": {
+      "level": "중길",
+      "guaci": "둔: 원형이정, 길하나 나아감은 불가하다. 제후를 세움이 이롭다.",
+      "yaoci": [
+        "초구: 머뭇거리니, 바르게 지킴이 이롭고, 제후를 세움이 이롭다.",
+        "육이: 둔하고 지체하니, 말을 타고 물러남과 같다. 도둑이 아니고, 혼인을 구함이다. 여자가 정절을 지켜 시집가지 않으나, 십 년 후에야 시집간다.",
+        "육삼: 사슴을 쫓으나 인도자가 없고, 숲에 들어감이다. 군자가 위태로움을 보아 멈추는 것이 옳다. 가면 욕됨이 있다.",
+        "육사: 말을 타고 물러남과 같으니, 혼인을 구하면 길하다. 불리함이 없다.",
+        "구오: 기름에 막히니, 작은 정은 길하고, 큰 정은 흉하다.",
+        "상육: 말을 타고 물러나니, 피눈물을 흘린다."
+      ]
+    }
+  },
+  "山水蒙": {
+    "zh": {
+      "level": "中吉",
+      "guaci": "亨。匪我求童蒙，童蒙求我。初筮告，再三渎，渎则不告。利贞。",
+      "yaoci": [
+        "初六：发蒙，利用刑人，用说桎梏，以往吝。",
+        "九二：包蒙，吉。纳妇，吉。子克家。",
+        "六三：勿用取女，见金夫，不有躬，无攸利。",
+        "六四：困蒙，吝。",
+        "六五：童蒙，吉。",
+        "上九：击蒙。不利为寇，利御寇。"
+      ]
+    },
+    "en": {
+      "level": "Moderate Luck",
+      "guaci": "Youthful Folly: Success. It is not I who seek the youthful fool, but the fool who seeks me. At the first oracle I inform him; if he asks two or three times, it is importunity. If he importunes, I give him no information. Advantageous to be steadfast.",
+      "yaoci": [
+        "Six at the beginning: To develop the youth. It is useful to punish men, to remove shackles and fetters. Going forward brings disgrace.",
+        "Nine in the second place: To bear with the youth. Auspicious. To take a wife is auspicious. The son is able to rule the household.",
+        "Six in the third place: Do not marry such a girl. Seeing a bronze man, she has no self. Nothing is favorable.",
+        "Six in the fourth place: Entangled folly. Disgrace.",
+        "Six in the fifth place: Childlike folly. Auspicious.",
+        "Nine at the top: To strike the youth. Not favorable to be a robber, favorable to defend against robbers."
+      ]
+    },
+    "ja": {
+      "level": "中吉",
+      "guaci": "蒙：亨。我童蒙を求むるに匪ず。童蒙我を求む。初めて筮すれば告ぐ。再三にして渎れば、渎れば則ち告げず。貞に利あり。",
+      "yaoci": [
+        "初六：蒙を発す。人を刑するに用いて、桎梏を説くに用う。往けば吝なり。",
+        "九二：蒙を包む。吉。婦を納む。吉。子家を克つ。",
+        "六三：女を取るに用うる勿れ。金夫を見るも、躬を有せず。攸往なし。",
+        "六四：蒙に困しむ。吝。",
+        "六五：童蒙。吉。",
+        "上九：蒙を撃つ。寇を為すに利あらず。寇を御するに利あり。"
+      ]
+    },
+    "ko": {
+      "level": "중길",
+      "guaci": "몽: 형통하다. 내가 아이 같은 어리석음을 구하는 것이 아니라, 아이 같은 어리석음이 나를 구한다. 처음 점치면 알려주지만, 두세 번 거듭 물으면 성가시다. 성가시면 알려주지 않는다. 바름을 지킴이 이롭다.",
+      "yaoci": [
+        "초육: 어리석음을 발함이다. 형벌을 쓰고, 차꼬를 풀어줌이다. 나아가면 욕됨이 있다.",
+        "구이: 어리석음을 감싸줌이니, 길하다. 아내를 맞으면 길하다. 아들이 집안을 다스린다.",
+        "육삼: 그런 여자를 아내로 삼지 말라. 금속 같은 남자를 보아도 자기 몸을 가지지 못한다. 이로움이 없다.",
+        "육사: 어리석음에 곤궁함이 있다. 욕됨이다.",
+        "육오: 아이 같은 어리석음, 길하다.",
+        "상구: 어리석음을 치는 것이니, 도둑이 됨은 불리하고, 도둑을 막음은 이롭다."
+      ]
+    }
+  },
+  "水天需": {
+    "zh": {
+      "level": "中吉",
+      "guaci": "有孚，光亨，贞吉。利涉大川。",
+      "yaoci": [
+        "初九：需于郊，利用恒，无咎。",
+        "九二：需于沙，小有言，终吉。",
+        "九三：需于泥，致寇至。",
+        "六四：需于血，出自穴。",
+        "九五：需于酒食，贞吉。",
+        "上六：入于穴，有不速之客三人来，敬之终吉。"
+      ]
+    },
+    "en": {
+      "level": "Moderate Luck",
+      "guaci": "Waiting: With sincerity, brilliant success. Perseverance brings good fortune. Favorable to cross the great river.",
+      "yaoci": [
+        "Nine at the beginning: Waiting in the outskirts. It is beneficial to remain constant. No blame.",
+        "Nine in the second place: Waiting on the sand. There is some gossip, but in the end good fortune.",
+        "Nine in the third place: Waiting in the mud. Brings bandits.",
+        "Six in the fourth place: Waiting in blood. Leaving the cave.",
+        "Nine in the fifth place: Waiting with wine and food. Perseverance brings good fortune.",
+        "Six at the top: Entering into the cave. Unexpected guests arrive, three people. Treat them with respect, and in the end good fortune."
+      ]
+    },
+    "ja": {
+      "level": "中吉",
+      "guaci": "需：孚有り、光亨す。貞に吉。大川を涉るに利あり。",
+      "yaoci": [
+        "初九：郊に需つ。恒を用うれば、咎なし。",
+        "九二：沙に需つ。小しく言有り。終に吉。",
+        "九三：泥に需つ。寇を致す。",
+        "六四：血に需つ。穴を出づ。",
+        "九五：酒食に需つ。貞に吉。",
+        "上六：穴に入る。不速の客三人来たる。之を敬すれば、終に吉。"
+      ]
+    },
+    "ko": {
+      "level": "중길",
+      "guaci": "수: 성실함이 있어 빛나게 형통하다. 바름을 지키면 길하다. 큰 내를 건넘이 이롭다.",
+      "yaoci": [
+        "초구: 들에서 기다림이다. 항상함을 지킴이 이로우니 허물이 없다.",
+        "구이: 모래에서 기다림이다. 작은 말이 있으나, 끝내 길하다.",
+        "구삼: 진흙에서 기다림이니, 도적이 이른다.",
+        "육사: 피 속에서 기다림이니, 구멍에서 나온다.",
+        "구오: 술과 음식을 두고 기다림이다. 바르게 하면 길하다.",
+        "상육: 굴 속에 들어가니, 뜻밖의 손님 세 사람이 온다. 공경히 대하면 끝내 길하다."
+      ]
+    }
+  },
+  "天水讼": {
+    "zh": {
+      "level": "小凶",
+      "guaci": "有孚窒惕，中吉，终凶。利见大人。不利涉大川。",
+      "yaoci": [
+        "初六：不永所事，小有言，终吉。",
+        "九二：不克讼，归而逋，其邑人三百户无眚。",
+        "六三：食旧德，贞厉，终吉。或从王事，无成。",
+        "九四：不克讼，复即命渝，安贞吉。",
+        "九五：讼元吉。",
+        "上九：或锡之鞶带，终朝三褫之。"
+      ]
+    },
+    "en": {
+      "level": "Minor Misfortune",
+      "guaci": "Conflict: Sincerity is blocked and apprehensive. Moderate good fortune at the beginning, misfortune at the end. Favorable to see the great man. Not favorable to cross the great river.",
+      "yaoci": [
+        "Six at the beginning: Not persisting in the matter. Some words, but in the end good fortune.",
+        "Nine in the second place: Unable to prevail in conflict, retreating home. The people of his town, three hundred households, are without blame.",
+        "Six in the third place: Eating old virtue. Steadfast but perilous. In the end good fortune. If engaged in royal service, no achievement.",
+        "Nine in the fourth place: Unable to prevail in conflict, returning to accept the mandate. Peaceful perseverance brings good fortune.",
+        "Nine in the fifth place: Conflict brings supreme good fortune.",
+        "Nine at the top: Perhaps awarded a leather belt, but by the end of the morning it is taken three times."
+      ]
+    },
+    "ja": {
+      "level": "小凶",
+      "guaci": "訟：孚有りて窒たり惕る。中は吉、終は凶。大人を見るに利あり。大川を涉るに利あらず。",
+      "yaoci": [
+        "初六：永く其の事をせず。小しく言有り。終に吉。",
+        "九二：訟に克たず。歸りて逋ぐ。其の邑人三百戸眚なきなり。",
+        "六三：旧德を食す。貞しけれども厲し。終に吉。或は王事に従うも、成すこと無し。",
+        "九四：訟に克たず。復た命に即き渝る。貞に安んじて吉。",
+        "九五：訟、元吉。",
+        "上九：或は之に鞶帯を錫うも、終朝三たび之を褫ぐ。"
+      ]
+    },
+    "ko": {
+      "level": "소흉",
+      "guaci": "송: 성실함이 막히고 두려움이 있다. 중도에는 길하나 끝은 흉하다. 대인을 만남이 이롭다. 큰 내를 건넘은 불리하다.",
+      "yaoci": [
+        "초육: 오래 일을 하지 않으니 작은 말이 있다. 끝내 길하다.",
+        "구이: 송사에 이기지 못하고 집으로 달아난다. 읍 사람 삼백 호가 허물이 없다.",
+        "육삼: 옛 덕을 먹는다. 바르게 하나 위태롭다. 끝내 길하다. 왕의 일을 좇아도 성취함이 없다.",
+        "구사: 송사에 이기지 못하니, 다시 명을 따르고 바꾸면 바름에 편안하여 길하다.",
+        "구오: 송사, 크게 길하다.",
+        "상구: 혹은 띠를 하사받으나, 아침 안에 세 번 빼앗긴다."
+      ]
+    }
+  },
+  "地水师": {
+    "zh": {
+      "level": "中平",
+      "guaci": "贞丈人吉，无咎。",
+      "yaoci": [
+        "初六：师出以律，否臧凶。",
+        "九二：在师中，吉，无咎。王三锡命。",
+        "六三：师或舆尸，凶。",
+        "六四：师左次，无咎。",
+        "六五：田有禽，利执言，无咎。长子帅师，弟子舆尸，贞凶。",
+        "上六：大君有命，开国承家，小人勿用。"
+      ]
+    },
+    "en": {
+      "level": "Neutral",
+      "guaci": "The Army: Perseverance brings good fortune to the great man. No blame.",
+      "yaoci": [
+        "Six at the beginning: The army goes forth in proper order. If disorderly, misfortune.",
+        "Nine in the second place: In the midst of the army. Good fortune, no blame. The king bestows three times his mandate.",
+        "Six in the third place: The army may carry corpses. Misfortune.",
+        "Six in the fourth place: The army encamps on the left side. No blame.",
+        "Six in the fifth place: There are birds in the field. Favorable to capture them. No blame. The eldest son leads the army, the younger brother carries corpses. Perseverance brings misfortune.",
+        "Six at the top: The great ruler issues mandates. Establishes states and families. The inferior man should not be employed."
+      ]
+    },
+    "ja": {
+      "level": "中平",
+      "guaci": "師：貞なる丈人は吉にして、咎無し。",
+      "yaoci": [
+        "初六：師出づるに律を以てす。否臧なれば凶。",
+        "九二：師の中に在り。吉にして咎無し。王三たび命を錫う。",
+        "六三：師或は尸を舆く。凶。",
+        "六四：師左に次す。咎無し。",
+        "六五：田に禽有り。言を執るに利あり。咎無し。長子師を帥い、弟子尸を舆く。貞しけれども凶。",
+        "上六：大君命有り。国を開き家を承く。小人は用うる勿れ。"
+      ]
+    },
+    "ko": {
+      "level": "중평",
+      "guaci": "사: 바르게 하는 장인이 길하니 허물이 없다.",
+      "yaoci": [
+        "초육: 군사가 나아감을 법으로 함이다. 법이 아니면 흉하다.",
+        "구이: 군사의 가운데 있으니 길하고 허물이 없다. 왕이 세 번 명을 내린다.",
+        "육삼: 군사가 혹은 시체를 싣는다. 흉하다.",
+        "육사: 군사가 왼쪽에 진을 친다. 허물이 없다.",
+        "육오: 밭에 새가 있으니, 붙잡음이 이롭고 허물이 없다. 장자가 군을 거느리고, 아우는 시체를 싣는다. 바르게 하면 흉하다.",
+        "상육: 대군이 명을 내리니, 나라를 열고 집을 세운다. 소인은 쓰지 말라."
+      ]
+    }
+  },
+     "水地比": {
+    "zh": {
+      "level": "中吉",
+      "guaci": "吉。原筮，元永贞，无咎。不宁方来，后夫凶。",
+      "yaoci": [
+        "初六：有孚比之，无咎。有孚盈缶，终来有他吉。",
+        "六二：比之自内，贞吉。",
+        "六三：比之匪人。",
+        "六四：外比之，贞吉。",
+        "九五：显比，王用三驱失前禽。邑人不诫，吉。",
+        "上六：比之无首，凶。"
+      ]
+    },
+    "en": {
+      "level": "Moderate Luck",
+      "guaci": "Holding Together: Good fortune. Seek advice, steadfast and lasting, no blame. Those restless come later, bringing misfortune.",
+      "yaoci": [
+        "Six at the beginning: Holding together with sincerity. No blame. With sincerity full as a jar, others will join in good fortune.",
+        "Six in the second place: Holding together with those within. Perseverance brings good fortune.",
+        "Six in the third place: Holding together with non-people.",
+        "Six in the fourth place: Holding together with those outside. Perseverance brings good fortune.",
+        "Nine in the fifth place: Manifesting union. The king uses three hunts, losing the front prey. The people of the city are not warned, good fortune.",
+        "Six at the top: No head in union. Misfortune."
+      ]
+    },
+    "ja": {
+      "level": "中吉",
+      "guaci": "比：吉。原筮、元永貞、咎無し。寧からざる方来れば、後夫凶なり。",
+      "yaoci": [
+        "初六：孚有りて之に比す。咎無し。孚缶に盈つ。終に来りて他に吉有り。",
+        "六二：之に比すること自ら内よりす。貞に吉。",
+        "六三：之に比するに匪人。",
+        "六四：之に比すること外よりす。貞に吉。",
+        "九五：比を顕す。王三たび駆けて前禽を失う。邑人戒めずして吉。",
+        "上六：之に比するに首無し。凶。"
+      ]
+    },
+    "ko": {
+      "level": "중길",
+      "guaci": "비: 길하다. 점을 묻고, 처음부터 끝까지 바름을 지키면 허물이 없다. 편안치 못한 자가 오면, 뒤에 남편이 흉하다.",
+      "yaoci": [
+        "초육: 믿음이 있어 함께하니 허물이 없다. 믿음이 가득한 그릇 같으니, 끝내 다른 길함이 온다.",
+        "육이: 안에서 더불어 함께함이니 바르게 하면 길하다.",
+        "육삼: 사람 아닌 자와 더불어 함께함이다.",
+        "육사: 밖에서 더불어 함께함이니 바르게 하면 길하다.",
+        "구오: 함께함을 드러내니, 왕이 세 번 사냥하여 앞의 짐승을 잃는다. 고을 사람이 경계하지 않아도 길하다.",
+        "상육: 함께함에 머리가 없으니 흉하다."
+      ]
+    }
+  },
+  "风天小畜": {
+    "zh": {
+      "level": "小吉",
+      "guaci": "亨。密云不雨，自我西郊。",
+      "yaoci": [
+        "初九：复自道，何其咎，吉。",
+        "九二：牵复，吉。",
+        "九三：舆说辐，夫妻反目。",
+        "六四：有孚，血去惕出，无咎。",
+        "九五：有孚挛如，富以其邻。",
+        "上九：既雨既处，尚德载，妇贞厉。月几望，君子征凶。"
+      ]
+    },
+    "en": {
+      "level": "Minor Luck",
+      "guaci": "Small Taming: Success. Dense clouds but no rain, from our western suburbs.",
+      "yaoci": [
+        "Nine at the beginning: Return by your own way. What blame? Good fortune.",
+        "Nine in the second place: Tied return. Good fortune.",
+        "Nine in the third place: The carriage loses its spokes. Husband and wife turn against each other.",
+        "Six in the fourth place: With sincerity, blood departs and fear fades. No blame.",
+        "Nine in the fifth place: With sincerity tightly bound. Wealth shared with neighbors.",
+        "Nine at the top: Rain comes, resting in place. Virtue is carried. The woman’s perseverance is dangerous. Near the full moon, if the noble one goes on an expedition, misfortune."
+      ]
+    },
+    "ja": {
+      "level": "小吉",
+      "guaci": "小畜：亨。密雲雨ふらず。我が西郊よりす。",
+      "yaoci": [
+        "初九：道より復る。其れ何の咎あらんや。吉。",
+        "九二：牽き復る。吉。",
+        "九三：輿の輻を説く。夫妻反目す。",
+        "六四：孚有り。血去り惕出づ。咎無し。",
+        "九五：孚有りて挛如たり。其の隣に富む。",
+        "上九：既に雨ふり既に処る。徳を尚び載す。婦貞しけれども厲し。月幾望。君子征けば凶。"
+      ]
+    },
+    "ko": {
+      "level": "소길",
+      "guaci": "소축: 형통하다. 짙은 구름이 있어도 비 내리지 않으니, 우리 서쪽 교외에서이다.",
+      "yaoci": [
+        "초구: 스스로 길로 돌아오니, 무슨 허물이 있으랴. 길하다.",
+        "구이: 이끌려 돌아오니 길하다.",
+        "구삼: 수레가 바퀴살을 잃으니 부부가 반목한다.",
+        "육사: 믿음이 있으면 피가 가시고 두려움이 사라진다. 허물이 없다.",
+        "구오: 믿음이 단단히 묶인 듯하니, 이웃과 부를 나눈다.",
+        "상구: 이미 비가 내려 그친다. 덕을 높이 받든다. 여인의 바름은 위태롭다. 달이 차오르면 군자가 출정하면 흉하다."
+      ]
+    }
+  },
+  "天泽履": {
+    "zh": {
+      "level": "小吉",
+      "guaci": "履虎尾，不咥人，亨。",
+      "yaoci": [
+        "初九：素履，往无咎。",
+        "九二：履道坦坦，幽人贞吉。",
+        "六三：眇能视，跛能履。履虎尾，咥人，凶。武人为于大君。",
+        "九四：履虎尾，愬愬，终吉。",
+        "九五：夬履，贞厉。",
+        "上九：视履，考祥，其旋元吉。"
+      ]
+    },
+    "en": {
+      "level": "Minor Luck",
+      "guaci": "Treading: Treading on the tail of the tiger. It does not bite the man. Success.",
+      "yaoci": [
+        "Nine at the beginning: Simple treading. Going brings no blame.",
+        "Nine in the second place: Treading a smooth, level path. The recluse remains steadfast, good fortune.",
+        "Six in the third place: One-eyed yet able to see, lame yet able to tread. Treading on the tiger’s tail, it bites the man. Misfortune. The warrior acts for the great prince.",
+        "Nine in the fourth place: Treading on the tiger’s tail, anxious, but in the end good fortune.",
+        "Nine in the fifth place: Resolute treading. Perseverance brings danger.",
+        "Nine at the top: Observing the treading, examining the signs. Returning brings great good fortune."
+      ]
+    },
+    "ja": {
+      "level": "小吉",
+      "guaci": "履：虎の尾を履む。人を咥えず。亨。",
+      "yaoci": [
+        "初九：素履す。往けば咎無し。",
+        "九二：履道坦坦たり。幽人貞にして吉。",
+        "六三：眇にして能く視、跛にして能く履む。虎の尾を履み、人を咥う。凶。武人は大君に為る。",
+        "九四：虎の尾を履む。愬愬たり。終に吉。",
+        "九五：夬履す。貞しけれども厲し。",
+        "上九：履を視、祥を考ふ。その旋るや元吉。"
+      ]
+    },
+    "ko": {
+      "level": "소길",
+      "guaci": "리: 호랑이 꼬리를 밟으니, 사람이 물리지 않고 형통하다.",
+      "yaoci": [
+        "초구: 소박하게 밟으니 가면 허물이 없다.",
+        "구이: 밟는 길이 평평하니 은둔자가 바르게 하면 길하다.",
+        "육삼: 외눈이면서도 보고 절뚝거리면서도 밟는다. 호랑이 꼬리를 밟으니 사람이 문다. 흉하다. 무인이 대군을 위하여 행한다.",
+        "구사: 호랑이 꼬리를 밟으니 두려우나 끝내 길하다.",
+        "구오: 결단력 있는 밟음이니 바르게 하면 위태롭다.",
+        "상구: 밟음을 살펴서 상서를 고찰하니, 돌아옴이 크게 길하다."
+      ]
+    }
+  },
+      "天雷无妄": {
+    "zh": {
+      "level": "中吉",
+      "guaci": "元亨，利贞。其匪正有眚，不利有攸往。",
+      "yaoci": [
+        "初九：无妄，往吉。",
+        "六二：不耕获，不菑畲，则利有攸往。",
+        "六三：无妄之灾，或系之牛，行人之得，邑人之灾。",
+        "九四：可贞。无咎。",
+        "九五：无妄之疾，勿药有喜。",
+        "上九：无妄，行有眚，无攸利。"
+      ]
+    },
+    "en": {
+      "level": "Moderate Luck",
+      "guaci": "Innocence: Supreme success. Perseverance furthers. If not correct, misfortune. Nothing is favorable in going forward.",
+      "yaoci": [
+        "Nine at the beginning: Innocence. Going brings good fortune.",
+        "Six in the second place: He does not cultivate but reaps. He does not clear the ground but the field is fertile. Favorable to have somewhere to go.",
+        "Six in the third place: Calamity of innocence. Tied to a cow, the passerby obtains it. The townspeople suffer misfortune.",
+        "Nine in the fourth place: Perseverance brings no blame.",
+        "Nine in the fifth place: Illness of innocence. Do not treat it with medicine. There will be joy.",
+        "Nine at the top: Innocence. Action brings misfortune. Nothing is favorable."
+      ]
+    },
+    "ja": {
+      "level": "中吉",
+      "guaci": "無妄：元亨、貞に利し。正しからざれば眚有り。往く攸あるに利あらず。",
+      "yaoci": [
+        "初九：無妄。往けば吉。",
+        "六二：耕さずして獲、菑さずして畲。則ち往く攸あるに利し。",
+        "六三：無妄の災。或いは之を牛に系す。行人の得、邑人の災なり。",
+        "九四：貞にす可し。咎無し。",
+        "九五：無妄の疾。薬する勿れ。喜び有り。",
+        "上九：無妄。行けば眚有り。利する攸無し。"
+      ]
+    },
+    "ko": {
+      "level": "중길",
+      "guaci": "무망: 크게 형통하고, 바름을 지키는 것이 이롭다. 바르지 않으면 재앙이 있으며, 가는 바가 이롭지 않다.",
+      "yaoci": [
+        "초구: 허망함이 없으니 가면 길하다.",
+        "육이: 밭을 갈지 않아도 거두며, 개간하지 않아도 밭이 된다. 가는 바가 이롭다.",
+        "육삼: 허망의 재앙이니, 혹 소를 묶어 두었는데 행인이 그것을 얻으니, 읍사람의 재앙이다.",
+        "구사: 바르게 하면 허물이 없다.",
+        "구오: 허망의 병이니 약을 쓰지 말라. 기쁨이 있다.",
+        "상구: 허망이니 행하면 재앙이 있어 이로운 바가 없다."
+      ]
+    }
+  },
+  "山天大畜": {
+    "zh": {
+      "level": "大吉",
+      "guaci": "利贞。不家食吉。利涉大川。",
+      "yaoci": [
+        "初九：有厉，利已。",
+        "九二：舆说輹。",
+        "九三：良马逐，利艰贞。曰闲舆卫，利有攸往。",
+        "六四：童牛之牿，元吉。",
+        "六五：豶豕之牙，吉。",
+        "上九：何天之衢，亨。"
+      ]
+    },
+    "en": {
+      "level": "Great Luck",
+      "guaci": "Great Taming: Perseverance furthers. Not eating at home brings good fortune. Favorable to cross the great river.",
+      "yaoci": [
+        "Nine at the beginning: Danger, but advantageous to stop.",
+        "Nine in the second place: The carriage is loosed from its axle.",
+        "Nine in the third place: Fine horses chase. Advantageous in difficulty, perseverance. Says: Train the carriage and guard. Favorable to have somewhere to go.",
+        "Six in the fourth place: The calf’s restraint. Supreme good fortune.",
+        "Six in the fifth place: The tusks of a castrated boar. Good fortune.",
+        "Nine at the top: What is Heaven’s highway! Success."
+      ]
+    },
+    "ja": {
+      "level": "大吉",
+      "guaci": "大畜：貞に利し。家食せずして吉。大川を渉るに利し。",
+      "yaoci": [
+        "初九：厲有り、已むに利し。",
+        "九二：輿輹を説く。",
+        "九三：良馬逐う。艱貞に利し。曰く舆衛を閑ふ。往く攸あるに利し。",
+        "六四：童牛の牿。元吉。",
+        "六五：豶豕の牙。吉。",
+        "上九：何ぞ天の衢ならん。亨る。"
+      ]
+    },
+    "ko": {
+      "level": "대길",
+      "guaci": "대축: 바름이 이롭다. 집에서 먹지 않으니 길하다. 큰 내를 건넘이 이롭다.",
+      "yaoci": [
+        "초구: 위태로우나 멈춤이 이롭다.",
+        "구이: 수레가 바퀴축에서 벗어난다.",
+        "구삼: 좋은 말이 달리니, 어려움 속에서도 바름이 이롭다. 수레와 호위를 단련함이 이롭다.",
+        "육사: 송아지를 가두니 크게 길하다.",
+        "육오: 거세한 돼지의 이빨이니 길하다.",
+        "상구: 어찌 하늘의 큰 길이 아니랴. 형통하다."
+      ]
+    }
+  },
+  "山雷颐": {
+    "zh": {
+      "level": "中吉",
+      "guaci": "贞吉。观颐，自求口实。",
+      "yaoci": [
+        "初九：舍尔灵龟，观我朵颐，凶。",
+        "六二：颠颐，拂经，于丘颐，征凶。",
+        "六三：拂颐，贞凶。十年勿用，无攸利。",
+        "六四：颠颐，吉。虎视眈眈，其欲逐逐，无咎。",
+        "六五：拂经，居贞吉，不可涉大川。",
+        "上九：由颐，厉吉。利涉大川。"
+      ]
+    },
+    "en": {
+      "level": "Moderate Luck",
+      "guaci": "Nourishment: Perseverance brings good fortune. Observe nourishment of self and others.",
+      "yaoci": [
+        "Nine at the beginning: Abandon your sacred tortoise. Look at my drooping jaws. Misfortune.",
+        "Six in the second place: Turning nourishment upside down, contrary to the norm. Nourishment at the hill. Going brings misfortune.",
+        "Six in the third place: Opposed to nourishment. Perseverance brings misfortune. Ten years not used. Nothing favorable.",
+        "Six in the fourth place: Turning nourishment upside down, good fortune. Tiger-eyed, watching intently, pursuing desires. No blame.",
+        "Six in the fifth place: Contrary to the norm. Dwelling in perseverance brings good fortune. Not favorable to cross the great river.",
+        "Nine at the top: Originating nourishment. Dangerous, but good fortune. Favorable to cross the great river."
+      ]
+    },
+    "ja": {
+      "level": "中吉",
+      "guaci": "頤：貞に吉。頤を観るに、自ら口実を求む。",
+      "yaoci": [
+        "初九：爾の霊亀を舍て、我が朵頤を観る。凶。",
+        "六二：顛頤、経に拂う。丘頤に於いて、征けば凶。",
+        "六三：頤に拂う。貞しけれども凶。十年用うる勿れ。利する攸無し。",
+        "六四：顛頤。吉。虎視眈眈として、その欲逐逐たり。咎無し。",
+        "六五：経に拂う。貞に居れば吉。大川を渉る可からず。",
+        "上九：頤に由る。厲しけれども吉。大川を渉るに利し。"
+      ]
+    },
+    "ko": {
+      "level": "중길",
+      "guaci": "이: 바르게 하면 길하다. 양육을 살펴 스스로 먹을 것을 구한다.",
+      "yaoci": [
+        "초구: 네 신령한 거북을 버리고 내 턱짓을 본다. 흉하다.",
+        "육이: 양육을 거꾸로 하여 도리에 어긋난다. 언덕에서 양육하니, 나아가면 흉하다.",
+        "육삼: 양육에 거슬리니 바르게 해도 흉하다. 십 년 동안 쓰지 말라. 이로운 바가 없다.",
+        "육사: 양육을 거꾸로 하니 길하다. 호랑이 눈으로 노려보고 욕망을 쫓으니 허물이 없다.",
+        "육오: 도리에 어긋나나 바르게 머무르면 길하다. 큰내를 건넘은 옳지 않다.",
+        "상구: 양육에서 비롯되니 위태로우나 길하다. 큰내를 건넘이 이롭다."
+      ]
+    }
+  },
+      "泽风大过": {
+    "zh": {
+      "level": "小凶",
+      "guaci": "栋桡。利有攸往，亨。",
+      "yaoci": [
+        "初六：藉用白茅，无咎。",
+        "九二：枯杨生稊，老夫得其女妻，无不利。",
+        "九三：栋桡，凶。",
+        "九四：栋隆，吉。有它吝。",
+        "九五：枯杨生华，老妇得士夫，无咎无誉。",
+        "上六：过涉灭顶，凶。无咎。"
+      ]
+    },
+    "en": {
+      "level": "Minor Misfortune",
+      "guaci": "Preponderance of the Great: The ridgepole sags. Favorable to have somewhere to go. Success.",
+      "yaoci": [
+        "Six at the beginning: Using white grass as a mat. No blame.",
+        "Nine in the second place: A withered poplar sprouts anew. An old man takes a young wife. Nothing unfavorable.",
+        "Nine in the third place: The ridgepole sags. Misfortune.",
+        "Nine in the fourth place: The ridgepole is uplifted. Good fortune. But with minor regret.",
+        "Nine in the fifth place: A withered poplar blossoms. An old woman takes a husband. No blame, no praise.",
+        "Six at the top: Going beyond, drowning. Misfortune. Yet no blame."
+      ]
+    },
+    "ja": {
+      "level": "小凶",
+      "guaci": "大過：棟桡。往く攸あるに利し、亨る。",
+      "yaoci": [
+        "初六：白茅を藉く。咎無し。",
+        "九二：枯楊に稊を生ず。老夫その女妻を得。利あらざる無し。",
+        "九三：棟桡。凶。",
+        "九四：棟隆。吉。他有れば吝。",
+        "九五：枯楊に華を生ず。老婦士夫を得。咎無し、誉れ無し。",
+        "上六：過ぎて頂に滅す。凶。咎無し。"
+      ]
+    },
+    "ko": {
+      "level": "소흉",
+      "guaci": "대과: 들보가 휘어졌다. 가는 바가 있으면 이롭고 형통하다.",
+      "yaoci": [
+        "초육: 흰 띠풀을 깔아도 허물이 없다.",
+        "구이: 마른 버드나무에 새싹이 돋고, 노인이 젊은 아내를 얻으니 이롭지 않음이 없다.",
+        "구삼: 들보가 휘니 흉하다.",
+        "구사: 들보가 솟으니 길하다. 그러나 다른 근심이 있다.",
+        "구오: 마른 버드나무가 꽃을 피우고, 노부인이 사내를 얻으니 허물도 없고 칭찬도 없다.",
+        "상육: 지나쳐 물에 잠기니 흉하다. 그러나 허물은 없다."
+      ]
+    }
+  },
+  "坎为水": {
+    "zh": {
+      "level": "小凶",
+      "guaci": "习坎。有孚，维心亨。行有尚。",
+      "yaoci": [
+        "初六：习坎，入于坎窞，凶。",
+        "九二：坎有险，求小得。",
+        "六三：来之坎坎，险且枕。入于坎窞，勿用。",
+        "六四：樽酒簋贰，用缶。纳约自牖，终无咎。",
+        "九五：坎不盈，只既平，无咎。",
+        "上六：系用徽纆，寘于丛棘。三岁不得，凶。"
+      ]
+    },
+    "en": {
+      "level": "Minor Misfortune",
+      "guaci": "The Abysmal: Repeated abyss. With sincerity, the heart is successful. Action is honored.",
+      "yaoci": [
+        "Six at the beginning: Repetition of the abyss. Entering into the pit. Misfortune.",
+        "Nine in the second place: The abyss has danger. Small gains possible.",
+        "Six in the third place: Coming into repeated abyss, perilous and resting. Entering the pit, not to be used.",
+        "Six in the fourth place: A goblet of wine, two bowls with food. Use earthenware. Accepting through the window. In the end no blame.",
+        "Nine in the fifth place: The abyss not full, only level. No blame.",
+        "Six at the top: Bound with cords, placed in thorn bushes. For three years not obtained. Misfortune."
+      ]
+    },
+    "ja": {
+      "level": "小凶",
+      "guaci": "坎：習坎。有孚、心を維（つな）ぎて亨る。行くに尚あり。",
+      "yaoci": [
+        "初六：習坎。坎窞に入る。凶。",
+        "九二：坎に険あり。小を求めて得。",
+        "六三：来るに坎坎たり。険しくして枕す。坎窞に入る。用うる勿れ。",
+        "六四：樽酒簋贰、缶を用う。約を牖より納る。終に咎無し。",
+        "九五：坎盈たず。ただ既に平らなり。咎無し。",
+        "上六：徽纆を系し、丛棘に寘く。三歳得ず。凶。"
+      ]
+    },
+    "ko": {
+      "level": "소흉",
+      "guaci": "감: 감험함이 거듭됨이라. 믿음이 있으면 마음이 형통하고, 행함에 높임이 있다.",
+      "yaoci": [
+        "초육: 감험을 거듭하여 구덩이에 빠지니 흉하다.",
+        "구이: 감험에 험함이 있으나 작은 것을 구하면 얻는다.",
+        "육삼: 감험에 이르러 험난하고 누워 쉼이니, 구덩이에 들어감이라. 쓰지 말라.",
+        "육사: 술 한 병과 그릇 두 개를 질그릇으로 쓰고, 약속을 창으로 들이니, 끝내 허물이 없다.",
+        "구오: 감험이 가득 차지 않고 평평할 뿐이니 허물이 없다.",
+        "상육: 줄로 묶여 가시덤불에 두니 삼 년 동안 얻지 못하니 흉하다."
+      ]
+    }
+  },
+  "离为火": {
+    "zh": {
+      "level": "中吉",
+      "guaci": "利贞。亨。畜牝牛吉。",
+      "yaoci": [
+        "初九：履错然，敬之无咎。",
+        "六二：黄离，元吉。",
+        "九三：日昃之离，不鼓缶而歌，则大耋之嗟，凶。",
+        "九四：突如其来如，焚如，死如，弃如。",
+        "六五：出涕沱若，戚嗟若，吉。",
+        "上九：王用出征，有嘉。折首，获匪其丑，无咎。"
+      ]
+    },
+    "en": {
+      "level": "Moderate Luck",
+      "guaci": "The Clinging: Favorable to persevere. Success. Raising a cow brings good fortune.",
+      "yaoci": [
+        "Nine at the beginning: Walking confusedly. Be respectful. No blame.",
+        "Six in the second place: Yellow radiance. Supreme good fortune.",
+        "Nine in the third place: The sun is setting. Without drumming on a pot, but singing, one sighs as an old man. Misfortune.",
+        "Nine in the fourth place: Suddenly coming, burning, dying, discarded.",
+        "Six in the fifth place: Tears fall like rain, sorrow and sighs. Good fortune.",
+        "Nine at the top: The king goes to war. Victory and honor. Cuts off the head, captures the enemy. No blame."
+      ]
+    },
+    "ja": {
+      "level": "中吉",
+      "guaci": "離：貞に利し。亨る。牝牛を畜ふに吉。",
+      "yaoci": [
+        "初九：錯然として履む。之を敬すれば咎無し。",
+        "六二：黄離。元吉。",
+        "九三：日昃の離。缶を鼓して歌わず、大耋の嗟。凶。",
+        "九四：突如として来る如く、焚く如く、死する如く、棄つる如し。",
+        "六五：涕を出して沱若たり、戚嗟する若し。吉。",
+        "上九：王、征を用うるに嘉有り。首を折り、其の丑に匪らずを獲つ。咎無し。"
+      ]
+    },
+    "ko": {
+      "level": "중길",
+      "guaci": "리: 바르게 함이 이롭고 형통하다. 암소를 기르면 길하다.",
+      "yaoci": [
+        "초구: 어지럽게 걸으니 공경하면 허물이 없다.",
+        "육이: 누런 빛이니 크게 길하다.",
+        "구삼: 해가 기울어 감인데, 북을 치지 않고 노래하며 늙음을 탄식하니 흉하다.",
+        "구사: 갑자기 와서 태우고 죽이며 버리는 것 같다.",
+        "육오: 눈물이 줄줄 흐르고 슬퍼하며 탄식하니 길하다.",
+        "상구: 왕이 출정하니 아름다움이 있다. 머리를 베어 적을 사로잡으니 허물이 없다."
+      ]
+    }
+  },
+  "泽山咸": {
+    "zh": {
+      "level": "中吉",
+      "guaci": "亨。利贞。取女吉。",
+      "yaoci": [
+        "初六：咸其拇。",
+        "六二：咸其腓，凶。居吉。",
+        "九三：咸其股，执其随，往吝。",
+        "九四：贞吉。悔亡。憧憧往来，朋从尔思。",
+        "九五：咸其脢，无悔。",
+        "上六：咸其辅、颊、舌。"
+      ]
+    },
+    "en": {
+      "level": "Moderate Luck",
+      "guaci": "Influence: Success. Favorable to persevere. Taking a wife brings good fortune.",
+      "yaoci": [
+        "Six at the beginning: Influence in the toes.",
+        "Six in the second place: Influence in the calves. Misfortune. But staying brings good fortune.",
+        "Nine in the third place: Influence in the thighs. Holding to what follows. Going brings regret.",
+        "Nine in the fourth place: Perseverance brings good fortune. Regret disappears. Restless going and coming, friends follow your thoughts.",
+        "Nine in the fifth place: Influence in the back. No regret.",
+        "Six at the top: Influence in the jaws, cheeks, and tongue."
+      ]
+    },
+    "ja": {
+      "level": "中吉",
+      "guaci": "咸：亨る。貞に利し。女を取るに吉。",
+      "yaoci": [
+        "初六：其の拇に咸（かん）ず。",
+        "六二：其の腓に咸ず。凶。居れば吉。",
+        "九三：其の股に咸ず。その随を執る。往けば吝。",
+        "九四：貞にして吉。悔亡ぶ。憧憧として往来すれば、朋爾の思に従う。",
+        "九五：其の脢に咸ず。悔無し。",
+        "上六：其の頬・舌に咸ず。"
+      ]
+    },
+    "ko": {
+      "level": "중길",
+      "guaci": "함: 형통하다. 바름이 이롭다. 여자를 취하면 길하다.",
+      "yaoci": [
+        "초육: 엄지발가락에 감응한다.",
+        "육이: 장딴지에 감응하니 흉하다. 머무르면 길하다.",
+        "구삼: 넓적다리에 감응하니 따르는 것을 잡는다. 나아가면 인색하다.",
+        "구사: 바르게 하면 길하다. 후회가 없어진다. 왕래가 분주하면 벗이 네 생각을 따른다.",
+        "구오: 등허리에 감응하니 후회가 없다.",
+        "상육: 턱, 뺨, 혀에 감응한다."
+      ]
+    }
+  },
+  "雷风恒": {
+    "zh": {
+      "level": "大吉",
+      "guaci": "亨，无咎，利贞。利有攸往。",
+      "yaoci": [
+        "初六：浚恒，贞凶，无攸利。",
+        "九二：悔亡。",
+        "九三：不恒其德，或承之羞。贞吝。",
+        "九四：田无禽。",
+        "六五：恒其德，贞。妇人吉，夫子凶。",
+        "上六：振恒，凶。"
+      ]
+    },
+    "en": {
+      "level": "Great Luck",
+      "guaci": "Duration: Success. No blame. Favorable to persevere. Favorable to have somewhere to go.",
+      "yaoci": [
+        "Six at the beginning: Deep-rooted duration. Perseverance brings misfortune. Nothing favorable.",
+        "Nine in the second place: Regret disappears.",
+        "Nine in the third place: One does not maintain his virtue. There is shame. Perseverance brings regret.",
+        "Nine in the fourth place: Hunting, but no game.",
+        "Six in the fifth place: Duration of virtue, perseverance. For a woman, good fortune. For a man, misfortune.",
+        "Six at the top: Restless duration. Misfortune."
+      ]
+    },
+    "ja": {
+      "level": "大吉",
+      "guaci": "恒：亨る。咎無し。貞に利し。往く攸あるに利し。",
+      "yaoci": [
+        "初六：浚恒。貞しけれども凶。利する攸無し。",
+        "九二：悔亡ぶ。",
+        "九三：其の徳を恒にせず。或いは之を承くる羞有り。貞なれば吝。",
+        "九四：田に禽無し。",
+        "六五：其の徳を恒にす。貞。婦人は吉、夫子は凶。",
+        "上六：恒を振う。凶。"
+      ]
+    },
+    "ko": {
+      "level": "대길",
+      "guaci": "항: 형통하고 허물이 없다. 바름이 이롭다. 가는 바가 이롭다.",
+      "yaoci": [
+        "초육: 깊은 항상이니 바르나 흉하다. 이로운 바가 없다.",
+        "구이: 후회가 없어진다.",
+        "구삼: 덕을 항상하지 않으니 부끄러움이 있다. 바르면 인색하다.",
+        "구사: 사냥하되 짐승이 없다.",
+        "육오: 덕을 항상하니 바르다. 부인은 길하나 남자는 흉하다.",
+        "상육: 항상을 흔드니 흉하다."
+      ]
+    }
+  },
+  "天山遁": {
+    "zh": {
+      "level": "中吉",
+      "guaci": "亨。小利贞。",
+      "yaoci": [
+        "初六：遁尾，厉。勿用有攸往。",
+        "六二：执之用黄牛之革，莫之胜说。",
+        "九三：系遁，有疾厉。畜臣妾吉。",
+        "九四：好遁，君子吉，小人否。",
+        "九五：嘉遁，贞吉。",
+        "上九：肥遁，无不利。"
+      ]
+    },
+    "en": {
+      "level": "Moderate Luck",
+      "guaci": "Retreat: Success. Small perseverance is beneficial.",
+      "yaoci": [
+        "Six at the beginning: Retreating by the tail. Danger. Do not act.",
+        "Six in the second place: Bound with yellow oxhide. None can loosen it.",
+        "Nine in the third place: Tied retreat. Illness and danger. Keeping servants and concubines is fortunate.",
+        "Nine in the fourth place: Good retreat. For the noble man, good fortune. For the petty man, misfortune.",
+        "Nine in the fifth place: Joyous retreat. Perseverance brings good fortune.",
+        "Nine at the top: Excellent retreat. Nothing unfavorable."
+      ]
+    },
+    "ja": {
+      "level": "中吉",
+      "guaci": "遯：亨る。小貞に利し。",
+      "yaoci": [
+        "初六：尾に遯る。厲し。用うる攸有る勿れ。",
+        "六二：之を執るに黄牛の革を用う。之を勝えて説く無し。",
+        "九三：遯に系す。疾厲有り。臣妾を畜ふは吉。",
+        "九四：遯るを好む。君子は吉、小人は否。",
+        "九五：嘉遯。貞にして吉。",
+        "上九：肥遯。利あらざる無し。"
+      ]
+    },
+    "ko": {
+      "level": "중길",
+      "guaci": "돈: 형통하다. 작은 바름이 이롭다.",
+      "yaoci": [
+        "초육: 꼬리로 물러나니 위태롭다. 가는 바를 두지 말라.",
+        "육이: 누런 소가죽으로 묶으니 풀 수 있는 이가 없다.",
+        "구삼: 묶여 물러남이니 병과 위태로움이 있다. 신첩을 두면 길하다.",
+        "구사: 물러남을 좋아하니 군자는 길하고 소인은 흉하다.",
+        "구오: 아름답게 물러나니 바르게 하면 길하다.",
+        "상구: 살찌게 물러나니 이롭지 않음이 없다."
+      ]
+    }
+  },
+      "雷天大壮": {
+    "zh": {
+      "level": "大吉",
+      "guaci": "利贞。",
+      "yaoci": [
+        "初九：壮于趾，征凶，有孚。",
+        "九二：贞吉。",
+        "九三：小人用壮，君子用罔。贞厉。羝羊触藩，羸其角。",
+        "九四：贞吉，悔亡。藩决不羸，壮于大舆之輹。",
+        "六五：丧羊于易，无悔。",
+        "上六：羝羊触藩，不能退，不能遂，无攸利。艰则吉。"
+      ]
+    },
+    "en": {
+      "level": "Great Luck",
+      "guaci": "Great Power: Favorable to persevere.",
+      "yaoci": [
+        "Nine at the beginning: Power in the toes. Going brings misfortune. There is truth.",
+        "Nine in the second place: Perseverance brings good fortune.",
+        "Nine in the third place: The inferior man uses power, the superior man does not. Perseverance brings danger. A ram butts against a hedge and gets his horns entangled.",
+        "Nine in the fourth place: Perseverance brings good fortune. Regret disappears. The hedge breaks; no entanglement. Power in the axle of a large wagon.",
+        "Six in the fifth place: Losing the ram in ease. No regret.",
+        "Six at the top: A ram butts against a hedge. Cannot go backward, cannot advance. Nothing is favorable. If difficult, good fortune."
+      ]
+    },
+    "ja": {
+      "level": "大吉",
+      "guaci": "大壮：貞に利し。",
+      "yaoci": [
+        "初九：趾に壮なり。征けば凶。有孚あり。",
+        "九二：貞にして吉。",
+        "九三：小人は壮を用い、君子は罔を用う。貞にして厲し。羝羊藩に触れ、其の角を羸す。",
+        "九四：貞にして吉、悔亡ぶ。藩決して羸せず。大輿の輹に壮なり。",
+        "六五：羊を易に喪うも悔亡し。",
+        "上六：羝羊藩に触れ、退く能わず、遂ぐる能わず。利する攸無し。艱えば則ち吉。"
+      ]
+    },
+    "ko": {
+      "level": "대길",
+      "guaci": "대장: 바름이 이롭다.",
+      "yaoci": [
+        "초구: 발가락에 힘이 있으니 가면 흉하다. 믿음이 있다.",
+        "구이: 바르면 길하다.",
+        "구삼: 소인은 힘을 쓰고 군자는 쓰지 않는다. 바르면 위태롭다. 숫양이 울타리를 들이받아 뿔이 얽힌다.",
+        "구사: 바르면 길하고 후회가 없어진다. 울타리가 무너져 얽히지 않는다. 큰 수레의 바퀴축에 힘이 있다.",
+        "육오: 양을 평탄한 곳에서 잃으니 후회가 없다.",
+        "상육: 숫양이 울타리를 들이받아 물러설 수도 없고 나아갈 수도 없다. 이로운 바가 없다. 어렵다면 길하다."
+      ]
+    }
+  },
+  "火地晋": {
+    "zh": {
+      "level": "中吉",
+      "guaci": "康侯用锡马蕃庶，昼日三接。",
+      "yaoci": [
+        "初六：晋如摧如，贞吉。罔孚，裕无咎。",
+        "六二：晋如愁如，贞吉。受兹介福，于其王母。",
+        "六三：众允，悔亡。",
+        "九四：晋如硕鼠，贞厉。",
+        "六五：悔亡，失得勿恤。往吉，无不利。",
+        "上九：晋其角，维用伐邑。厉吉，无咎。贞吝。"
+      ]
+    },
+    "en": {
+      "level": "Moderate Luck",
+      "guaci": "Progress: The noble one receives many horses. Three meetings in a day.",
+      "yaoci": [
+        "Six at the beginning: Progressing, yet hindered. Perseverance brings good fortune. No confidence, but abundance without blame.",
+        "Six in the second place: Progressing, yet distressed. Perseverance brings good fortune. Receive great blessings from the ancestress.",
+        "Six in the third place: All are in accord. Regret disappears.",
+        "Nine in the fourth place: Progressing like a large rat. Perseverance brings danger.",
+        "Six in the fifth place: Regret disappears. Gain and loss should not be worried about. Going brings good fortune, nothing unfavorable.",
+        "Nine at the top: Progressing with horns. Only suitable for attacking a city. Danger but good fortune. No blame. Perseverance brings regret."
+      ]
+    },
+    "ja": {
+      "level": "中吉",
+      "guaci": "晋：康侯馬を錫り蕃庶し、昼日に三たび接す。",
+      "yaoci": [
+        "初六：晋むこと摧するが如し。貞にして吉。孚無く、裕にして咎無し。",
+        "六二：晋むこと愁するが如し。貞にして吉。兹の介福を受く、其の王母に於いて。",
+        "六三：衆允にして悔亡ぶ。",
+        "九四：晋むこと硕鼠の如し。貞にして厲し。",
+        "六五：悔亡ぶ。失得を恤う勿れ。往けば吉、利あらざる無し。",
+        "上九：其の角に晋む。維れ邑を伐つに用う。厲しけれども吉。咎無し。貞なれば吝。"
+      ]
+    },
+    "ko": {
+      "level": "중길",
+      "guaci": "진: 강후가 말을 하사받아 번성하고, 낮에 세 번 뵌다.",
+      "yaoci": [
+        "초육: 나아가나 꺾인 듯하다. 바르면 길하다. 믿음은 없으나 너그러워 허물이 없다.",
+        "육이: 나아가나 근심스러워 보인다. 바르면 길하다. 큰 복을 왕모에게서 받는다.",
+        "육삼: 무리가 허락하니 후회가 없어진다.",
+        "구사: 나아감이 큰 쥐 같으니 바르면 위태롭다.",
+        "육오: 후회가 없어진다. 얻고 잃음을 근심하지 말라. 가면 길하여 불리함이 없다.",
+        "상구: 뿔로 나아가니 읍을 치는 데 쓰인다. 위태로우나 길하다. 허물 없다. 바르면 인색하다."
+      ]
+    }
+  },
+  "地火明夷": {
+    "zh": {
+      "level": "小凶",
+      "guaci": "利艰贞。",
+      "yaoci": [
+        "初九：明夷于飞，垂其翼。君子于行，三日不食。有攸往，主人有言。",
+        "六二：明夷，夷于左股，用拯马壮，吉。",
+        "九三：明夷于南狩，得其大首，不可疾贞。",
+        "六四：入于左腹，获明夷之心，于出门庭。",
+        "六五：箕子之明夷，利贞。",
+        "上六：不明晦。初登于天，后入于地。"
+      ]
+    },
+    "en": {
+      "level": "Minor Misfortune",
+      "guaci": "Darkening of the Light: Favorable in hardship and perseverance.",
+      "yaoci": [
+        "Nine at the beginning: Darkening of the light while flying, drooping its wings. The noble one on the move goes three days without eating. There is a destination, but the host has words.",
+        "Six in the second place: Darkening of the light, wounded in the left thigh. Use a strong horse to rescue. Good fortune.",
+        "Nine in the third place: Darkening of the light while hunting in the south. One gets the great chief. One must not be too hasty in perseverance.",
+        "Six in the fourth place: Entering the left side of the belly, obtaining the heart of darkening light, going out of the gate and courtyard.",
+        "Six in the fifth place: The darkening of the light of Prince Ji. Perseverance is favorable.",
+        "Six at the top: Not bright but dark. First ascends to heaven, then enters the earth."
+      ]
+    },
+    "ja": {
+      "level": "小凶",
+      "guaci": "明夷：艱貞に利し。",
+      "yaoci": [
+        "初九：明夷于飛び、其の翼を垂る。君子行に於いて、三日食わず。攸往有れば、主人言有り。",
+        "六二：明夷、左股に夷す。馬壮を用いて拯うれば、吉。",
+        "九三：明夷、南狩に於いて、大首を得る。疾く貞にする可からず。",
+        "六四：左腹に入る。明夷の心を獲て、門庭に出づ。",
+        "六五：箕子の明夷。貞に利し。",
+        "上六：明ならずして晦し。初め天に登り、後ち地に入る。"
+      ]
+    },
+    "ko": {
+      "level": "소흉",
+      "guaci": "명이: 어려운 바름에 이롭다.",
+      "yaoci": [
+        "초구: 밝음이 날아 어두워져 날개를 드리운다. 군자가 길에서 삼일 동안 먹지 못한다. 가는 바가 있으면 주인이 말한다.",
+        "육이: 밝음이 어두워져 왼쪽 넓적다리에 상처를 입는다. 힘센 말을 써서 구하면 길하다.",
+        "구삼: 밝음이 어두워져 남쪽에서 사냥할 때 큰 우두머리를 잡는다. 서둘러 바르게 해서는 안 된다.",
+        "육사: 왼쪽 배로 들어가 어두워진 밝음의 마음을 얻고 문뜰로 나온다.",
+        "육오: 기자의 밝음이 어두워짐이니 바름이 이롭다.",
+        "상육: 밝지 않고 어둡다. 처음에는 하늘에 오르고 뒤에는 땅에 들어간다."
+      ]
+    }
+  },
+      "风火家人": {
+    "zh": {
+      "level": "中吉",
+      "guaci": "利女贞。",
+      "yaoci": [
+        "初九：闲有家，悔亡。",
+        "六二：无攸遂，在中馈，贞吉。",
+        "九三：家人嗃嗃，悔厉吉；妇子嘻嘻，终吝。",
+        "九四：富家，大吉。",
+        "九五：王假有家，勿恤，吉。",
+        "上九：有孚威如，终吉。"
+      ]
+    },
+    "en": {
+      "level": "Moderate Luck",
+      "guaci": "The Family: Favorable for the woman's perseverance.",
+      "yaoci": [
+        "Nine at the beginning: Establishing order in the family. Regret disappears.",
+        "Six in the second place: Nothing outside accomplished. Staying with domestic tasks. Perseverance brings good fortune.",
+        "Nine in the third place: The family is strict and stern. Regret but danger brings good fortune. If the woman and children are frivolous, the end is shame.",
+        "Nine in the fourth place: The family is wealthy. Great good fortune.",
+        "Nine in the fifth place: The king gives his home. Do not worry. Good fortune.",
+        "Nine at the top: Confidence and awe. Good fortune in the end."
+      ]
+    },
+    "ja": {
+      "level": "中吉",
+      "guaci": "家人：女貞に利し。",
+      "yaoci": [
+        "初九：家を閑にすれば、悔亡ぶ。",
+        "六二：遂ぶる攸無し。中饋に在れば、貞にして吉。",
+        "九三：家人嗃嗃すれば、悔厲しくして吉。婦子嘻嘻すれば、終に吝なり。",
+        "九四：家を富ます。大吉。",
+        "九五：王假に家有り。恤う勿れ。吉。",
+        "上九：孚有りて威如し。終に吉。"
+      ]
+    },
+    "ko": {
+      "level": "중길",
+      "guaci": "가인: 여자의 바름이 이롭다.",
+      "yaoci": [
+        "초구: 집을 단속하면 후회가 없어진다.",
+        "육이: 이룬 바가 없으나 안에서 음식을 맡으면 바르면 길하다.",
+        "구삼: 집안이 엄하여 후회와 위태로움이 있으나 길하다. 아내와 자식이 웃고 떠들면 끝내 인색하다.",
+        "구사: 집이 부유하니 크게 길하다.",
+        "구오: 임금이 집에 은혜를 베푸니 근심하지 말라. 길하다.",
+        "상구: 믿음이 있고 위엄이 있으니 끝내 길하다."
+      ]
+    }
+  },
+  "火泽睽": {
+    "zh": {
+      "level": "小吉",
+      "guaci": "小事吉。",
+      "yaoci": [
+        "初九：悔亡。丧马，勿逐，自复；见恶人，无咎。",
+        "九二：遇主于巷，无咎。",
+        "六三：见舆曳，其牛掣，其人天且劓，无初有终。",
+        "九四：睽孤，遇元夫，交孚，厉无咎。",
+        "六五：悔亡。厥宗噬肤，往何咎。",
+        "上九：睽孤，见豕负涂，载鬼一车。先张之弧，后说之弧，匪寇婚媾，往遇雨则吉。"
+      ]
+    },
+    "en": {
+      "level": "Minor Luck",
+      "guaci": "Opposition: Small matters bring good fortune.",
+      "yaoci": [
+        "Nine at the beginning: Regret disappears. Losing the horse, do not chase, it returns by itself. Seeing an evil man, no blame.",
+        "Nine in the second place: Meeting the lord in the alley. No blame.",
+        "Six in the third place: Seeing a carriage dragged, the ox is restrained, the man’s nose and ears cut off. No beginning but an end.",
+        "Nine in the fourth place: Alone in opposition, meeting a great man. Mutual trust. Danger, but no blame.",
+        "Six in the fifth place: Regret disappears. The ancestor bites through the skin. Going brings no blame.",
+        "Nine at the top: Alone in opposition, seeing a pig carrying mud and a wagon full of ghosts. First draws the bow, then lays it down. Not robbers but suitors. Going and meeting rain brings good fortune."
+      ]
+    },
+    "ja": {
+      "level": "小吉",
+      "guaci": "睽：小事に吉。",
+      "yaoci": [
+        "初九：悔亡ぶ。馬を喪うも逐う勿れ、自ら復る。悪人を見ても咎無し。",
+        "九二：巷に主に遇う。咎無し。",
+        "六三：舆の曳かるを見る。其の牛掣られ、其の人天且にして劓る。初め無くして終わり有り。",
+        "九四：睽孤なり。元夫に遇う。交孚す。厲しくして咎無し。",
+        "六五：悔亡ぶ。厥宗膚を噬む。往けば何の咎か有らん。",
+        "上九：睽孤なり。豕の涂を負い、鬼を一車に載するを見る。先ず其の弧を張り、後に其の弧を説く。寇に非ず、婚媾なり。往きて雨に遇えば則ち吉。"
+      ]
+    },
+    "ko": {
+      "level": "소길",
+      "guaci": "규: 작은 일이 길하다.",
+      "yaoci": [
+        "초구: 후회가 없어진다. 말을 잃어도 쫓지 않으면 스스로 돌아온다. 악인을 보아도 허물이 없다.",
+        "구이: 골목에서 임금을 만나니 허물이 없다.",
+        "육삼: 수레가 끌려가고 소가 얽히며 그 사람은 코와 귀가 잘렸다. 처음은 없으나 끝은 있다.",
+        "구사: 홀로 대립하나 큰 사람을 만나 서로 믿는다. 위태로우나 허물이 없다.",
+        "육오: 후회가 없어진다. 그 조상이 살을 씹는다. 가면 무슨 허물이 있겠는가?",
+        "상구: 홀로 대립하여 돼지가 진흙을 지고 귀신을 한 수레에 싣는 것을 본다. 먼저 활을 당기나 나중에 풀어버린다. 도적이 아니라 혼인하는 것이다. 가서 비를 만나면 길하다."
+      ]
+    }
+  },
+  "水山蹇": {
+    "zh": {
+      "level": "凶",
+      "guaci": "利西南，不利东北。利见大人，贞吉。",
+      "yaoci": [
+        "初六：往蹇，来誉。",
+        "六二：王臣蹇蹇，匪躬之故。",
+        "九三：往蹇来反。",
+        "六四：往蹇来连。",
+        "九五：大蹇朋来。",
+        "上六：往蹇来硕，吉；利见大人。"
+      ]
+    },
+    "en": {
+      "level": "Misfortune",
+      "guaci": "Obstruction: Favorable in the southwest, unfavorable in the northeast. Favorable to see the great man. Perseverance brings good fortune.",
+      "yaoci": [
+        "Six at the beginning: Going is obstructed, returning brings praise.",
+        "Six in the second place: The king’s minister is obstructed, not because of himself.",
+        "Nine in the third place: Going is obstructed, returning brings reversal.",
+        "Six in the fourth place: Going is obstructed, returning brings connection.",
+        "Nine in the fifth place: Great obstruction, companions come.",
+        "Six at the top: Going is obstructed, returning brings greatness. Good fortune. Favorable to see the great man."
+      ]
+    },
+    "ja": {
+      "level": "凶",
+      "guaci": "蹇：西南に利し、東北に利せず。大人を見るに利し、貞にして吉。",
+      "yaoci": [
+        "初六：往けば蹇し、来れば誉れ有り。",
+        "六二：王臣蹇蹇たり。躬の故に匪ず。",
+        "九三：往けば蹇し、来れば反る。",
+        "六四：往けば蹇し、来れば連なる。",
+        "九五：大蹇。朋来る。",
+        "上六：往けば蹇し、来れば碩なり。吉。大人を見るに利し。"
+      ]
+    },
+    "ko": {
+      "level": "흉",
+      "guaci": "건: 서남은 이롭고 동북은 불리하다. 대인을 뵘이 이롭다. 바르면 길하다.",
+      "yaoci": [
+        "초육: 가면 막히고 오면 명예가 있다.",
+        "육이: 왕의 신하가 막히나 자신 때문이 아니다.",
+        "구삼: 가면 막히고 오면 되돌아온다.",
+        "육사: 가면 막히고 오면 이어진다.",
+        "구오: 큰 막힘에 벗이 온다.",
+        "상육: 가면 막히고 오면 커진다. 길하다. 대인을 뵘이 이롭다."
+      ]
+    }
+  },
+      "雷水解": {
+    "zh": {
+      "level": "上吉",
+      "guaci": "利西南，利东北。解而有功。",
+      "yaoci": [
+        "初六：无咎。",
+        "九二：田获三狐，得黄矢，贞吉。",
+        "九三：负且乘，致寇至，贞吝。",
+        "六四：解而拇，朋至斯孚。",
+        "九五：君子维有解，吉。",
+        "上六：公用射隼于高墉之上，获之，无不利。"
+      ]
+    },
+    "en": {
+      "level": "Supreme Luck",
+      "guaci": "Deliverance: Favorable to the southwest and northeast. Deliverance brings success.",
+      "yaoci": [
+        "Six at the beginning: No blame.",
+        "Nine in the second place: Catch three foxes in the field, obtain yellow arrows. Perseverance brings good fortune.",
+        "Nine in the third place: Carrying and riding, attackers arrive. Perseverance brings regret.",
+        "Six in the fourth place: Release the toes. Friends come and trust.",
+        "Nine in the fifth place: The noble one maintains deliverance. Good fortune.",
+        "Six at the top: The ruler shoots a falcon from a high wall. Captures it. Nothing is unfavorable."
+      ]
+    },
+    "ja": {
+      "level": "上吉",
+      "guaci": "解：西南に利し、東北に利す。解いて功有り。",
+      "yaoci": [
+        "初六：咎無し。",
+        "九二：田に三狐を獲る。黄矢を得る。貞にして吉。",
+        "九三：負いて且つ乗る。寇を致す。貞にして吝。",
+        "六四：解して拇。朋至りて孚有り。",
+        "九五：君子維りて解有り。吉。",
+        "上六：公、高墉の上に隼を射る。之を獲る。利あらざる無し。"
+      ]
+    },
+    "ko": {
+      "level": "상길",
+      "guaci": "해: 서남과 동북에 이롭다. 해를 풀어 공이 있다.",
+      "yaoci": [
+        "초육: 허물이 없다.",
+        "구이: 밭에서 여우 세 마리를 잡아 황화살을 얻는다. 바르면 길하다.",
+        "구삼: 짐을 지고 타니 도적이 온다. 바르면 인색하다.",
+        "육사: 발가락을 풀어주니 벗이 와서 신뢰한다.",
+        "구오: 군자가 해를 유지하니 길하다.",
+        "상육: 임금이 높은 담 위에서 매를 쏘아 잡는다. 불리함이 없다."
+      ]
+    }
+  },
+  "山泽损": {
+    "zh": {
+      "level": "中吉",
+      "guaci": "利有攸往，利涉大川。",
+      "yaoci": [
+        "初九：已事遄往，无咎。",
+        "六二：利贞。征凶。弗损益之。",
+        "九三：三人行，则损一人；一人行，则得其友。",
+        "六四：损不益，征凶，利艰贞。",
+        "九五：有孚惠心，勿问元吉。",
+        "上六：弗损益之，无咎。贞吉。"
+      ]
+    },
+    "en": {
+      "level": "Moderate Luck",
+      "guaci": "Decrease: Favorable to proceed, favorable to cross great rivers.",
+      "yaoci": [
+        "Six at the beginning: Already done, hasten forward. No blame.",
+        "Six in the second place: Favorable to persevere. Going brings misfortune. Do not decrease; increase it.",
+        "Nine in the third place: Three travel together, one is lost. One travels alone, gains a friend.",
+        "Six in the fourth place: Decrease without benefit. Going brings misfortune. Favorable to persevere in hardship.",
+        "Nine in the fifth place: Faithful heart, do not question. Supreme good fortune.",
+        "Six at the top: Do not decrease; increase it. No blame. Perseverance brings good fortune."
+      ]
+    },
+    "ja": {
+      "level": "中吉",
+      "guaci": "損：往くに利し、大川を涉るに利し。",
+      "yaoci": [
+        "初九：已事遄く往くも、咎無し。",
+        "六二：貞に利し。征けば凶。損せず益すべし。",
+        "九三：三人行けば、一人を損ず。一人行けば、その友を得る。",
+        "六四：損して益せず。征えば凶。艱貞に利し。",
+        "九五：孚有り恵心あり。問うこと勿れ。元吉。",
+        "上六：損せず益す。咎無し。貞にして吉。"
+      ]
+    },
+    "ko": {
+      "level": "중길",
+      "guaci": "손: 가는 것이 이롭고 큰 강을 건너는 것이 이롭다.",
+      "yaoci": [
+        "초육: 이미 한 일은 서둘러 가도 허물이 없다.",
+        "육이: 바르게 하면 이롭다. 가면 흉하다. 줄이지 말고 늘려라.",
+        "구삼: 세 사람이 가면 한 사람을 잃는다. 혼자 가면 벗을 얻는다.",
+        "육사: 줄여도 이롭지 않다. 가면 흉하다. 어려움 속 바름이 이롭다.",
+        "구오: 믿음 있는 마음, 묻지 말라. 크게 길하다.",
+        "상육: 줄이지 말고 늘려라. 허물 없다. 바르면 길하다."
+      ]
+    }
+  },
+  "风雷益": {
+    "zh": {
+      "level": "大吉",
+      "guaci": "利有攸往，利涉大川。",
+      "yaoci": [
+        "初九：利用为大作，元吉，无咎。",
+        "六二：利贞。征凶。弗益之。",
+        "九三：益之用凶事，无咎。",
+        "六四：中行，告公用圭。",
+        "九五：有孚惠心，勿问元吉。",
+        "上六：莫益之，或击之，吉。"
+      ]
+    },
+    "en": {
+      "level": "Great Luck",
+      "guaci": "Increase: Favorable to proceed, favorable to cross great rivers.",
+      "yaoci": [
+        "Six at the beginning: Useful for great undertakings. Supreme good fortune. No blame.",
+        "Six in the second place: Favorable to persevere. Going brings misfortune. Do not increase it.",
+        "Nine in the third place: Increasing it brings misfortune. No blame.",
+        "Six in the fourth place: Central conduct, inform the ruler using jade.",
+        "Nine in the fifth place: Faithful heart, do not question. Supreme good fortune.",
+        "Six at the top: Do not increase it. Perhaps strike it. Good fortune."
+      ]
+    },
+    "ja": {
+      "level": "大吉",
+      "guaci": "益：往くに利し、大川を涉るに利し。",
+      "yaoci": [
+        "初九：大作に利用す。元吉、咎無し。",
+        "六二：貞に利し。征けば凶。益さず。",
+        "九三：益するに凶事を用うも、咎無し。",
+        "六四：中行し、公に圭を告ぐ。",
+        "九五：孚有り恵心あり。問うこと勿れ。元吉。",
+        "上六：益さず。或いは之を擊つ。吉。"
+      ]
+    },
+    "ko": {
+      "level": "대길",
+      "guaci": "익: 가는 것이 이롭고 큰 강을 건너는 것이 이롭다.",
+      "yaoci": [
+        "초육: 큰 일을 하는 데 이롭다. 크게 길하다. 허물 없다.",
+        "육이: 바르면 길하다. 가면 흉하다. 늘리지 말라.",
+        "구삼: 늘리면 흉한 일을 쓰게 되나 허물 없다.",
+        "육사: 중도 행하니 임금에게 옥을 써서 알린다.",
+        "구오: 믿음 있는 마음, 묻지 말라. 크게 길하다.",
+        "상육: 늘리지 말라. 혹 쳐도 길하다."
+      ]
+    }
+  },
+  "泽天夬": {
+    "zh": {
+      "level": "大吉",
+      "guaci": "扬于王庭，孚号有厉。",
+      "yaoci": [
+        "初九：壮于前趾，往无咎。",
+        "九二：惕号，厉，勿用有攸往。",
+        "九三：壮于中行，征凶。",
+        "六四：悔亡，征吉，勿用取女。",
+        "九五：壮于大舆之輹，有凶。",
+        "上六：无号，终有凶。"
+      ]
+    },
+    "en": {
+      "level": "Great Luck",
+      "guaci": "Breakthrough: Raise in the royal court. Faithful calling brings danger.",
+      "yaoci": [
+        "Six at the beginning: Strong in the toes, going brings no blame.",
+        "Nine in the second place: Alert call, danger. Do not proceed.",
+        "Nine in the third place: Strong in central conduct. Going brings misfortune.",
+        "Six in the fourth place: Regret disappears. Going brings good fortune. Do not take a wife.",
+        "Nine in the fifth place: Strong in the axle of a large wagon. Misfortune.",
+        "Six at the top: No call. In the end, misfortune."
+      ]
+    },
+    "ja": {
+      "level": "大吉",
+      "guaci": "夬：王庭に揚ぐ。孚の号有りて厲し。",
+      "yaoci": [
+        "初九：前趾に壮なり。往けば咎無し。",
+        "九二：惕号、厲。用うるに攸有る勿れ。",
+        "九三：中行に壮なり。征けば凶。",
+        "六四：悔亡ぶ。征れば吉。女を取るに用うる勿れ。",
+        "九五：大輿の輹に壮なり。凶有り。",
+        "上六：号無し。終に凶有り。"
+      ]
+    },
+    "ko": {
+      "level": "대길",
+      "guaci": "쾌: 왕궁에서 올림. 믿음의 부름에 위태로움이 있다.",
+      "yaoci": [
+        "초육: 발가락에 힘이 있으니 가면 허물 없다.",
+        "구이: 경계하며 부른다. 위태롭다. 가는 바를 두지 말라.",
+        "구삼: 중앙에 힘이 있으니 가면 흉하다.",
+        "육사: 후회가 없고 가면 길하다. 여자를 취하지 말라.",
+        "구오: 큰 수레의 바퀴축에 힘이 있으니 흉하다.",
+        "상육: 부름이 없다. 끝에 흉하다."
+      ]
+    }
+  },
+      "水泽节": {
+    "zh": {
+      "level": "中吉",
+      "guaci": "亨，利用恒，无咎。",
+      "yaoci": [
+        "初九：不出户庭，无咎。",
+        "六二：不出门庭，凶。",
+        "六三：不节若，则嗟若，无咎。",
+        "六四：安节，亨，利有攸往。",
+        "九五：甘节，吉；往有尚。",
+        "上六：苦节，贞凶；悔亡。"
+      ]
+    },
+    "en": {
+      "level": "Moderate Luck",
+      "guaci": "Limitation: Penetrating. Favorable to maintain constancy. No blame.",
+      "yaoci": [
+        "Six at the beginning: Do not go out of the courtyard. No blame.",
+        "Six in the second place: Do not go out of the gate. Misfortune.",
+        "Six in the third place: If one does not follow limitation, alas, no blame.",
+        "Six in the fourth place: Harmonious limitation. Penetrating. Favorable to proceed.",
+        "Nine in the fifth place: Sweet limitation. Good fortune. Going has favor.",
+        "Six at the top: Bitter limitation. Perseverance brings misfortune. Regret disappears."
+      ]
+    },
+    "ja": {
+      "level": "中吉",
+      "guaci": "節：亨。恒に利し、咎無し。",
+      "yaoci": [
+        "初九：戸庭を出ず。咎無し。",
+        "六二：門庭を出ず。凶。",
+        "六三：節を守らざれば、嗟乎。咎無し。",
+        "六四：安節、亨、往くに利あり。",
+        "九五：甘節、吉。往きて尚あり。",
+        "上六：苦節、貞に凶。悔亡ぶ。"
+      ]
+    },
+    "ko": {
+      "level": "중길",
+      "guaci": "절: 통함. 변함을 지킴이 이롭다. 허물 없다.",
+      "yaoci": [
+        "초육: 집 마당을 나가지 않는다. 허물 없다.",
+        "육이: 문 밖으로 나가지 않는다. 흉하다.",
+        "육삼: 절을 지키지 않으면 아, 허물이 없다.",
+        "육사: 안절, 통함. 가는 것이 이롭다.",
+        "구오: 달콤한 절. 길하다. 가면 이롭다.",
+        "상육: 쓰라린 절. 바름이 흉하다. 후회가 사라진다."
+      ]
+    }
+  }
+};
+
+    // 卦的分类
+    const shangshangGua = [
+      "乾为天", "坤为地", "地天泰", "天火同人", "火天大有",
+      "地山谦", "雷地豫", "泽雷随", "山风蛊", "地泽临",
+      "风地观", "火雷噬嗑", "山火贲", "地雷复", "山天大畜",
+      "山雷颐", "泽风大过", "坎为水", "离为火", "泽山咸"
+    ];
+    
+    const zhongshangGua = [
+      "雷风恒", "天山遁", "雷天大壮", "火地晋", "风火家人",
+      "火泽睽", "水山蹇", "雷水解", "山泽损", "风雷益",
+      "泽天夬", "天风姤", "泽地萃", "地风升", "泽火革",
+      "火风鼎", "震为雷", "艮为山", "风山渐", "雷泽归妹",
+      "雷火丰", "火山旅", "巽为风", "兑为泽", "风水涣",
+      "水泽节", "风泽中孚", "雷山小过", "水火既济", "火水未济"
+    ];
+
+    const zhongxiaGua = [
+      "天地否", "天山遁", "天水讼", "天风姤", "天雷无妄",
+      "风天小畜", "水天需", "山天大畜", "雷天大壮", "泽天夬",
+      "地水师", "山水蒙", "坎为水", "风水涣", "雷水解",
+      "火水未济", "泽水困", "天水讼", "山火贲", "地火明夷"
+    ];
+
+    const xiaxiaGua = [
+      "天雷无妄", "泽雷随", "火雷噬嗑", "雷地豫", "风雷益",
+      "水雷屯", "山雷颐", "地雷复", "天风姤", "泽风大过",
+      "火风鼎", "雷风恒", "巽为风", "水风井", "山风蛊",
+      "地风升", "天水讼", "泽水困", "火水未济", "雷水解",
+      "风水涣", "坎为水", "山水蒙", "地水师", "天山遁",
+      "泽山咸", "火山旅", "雷山小过", "风山渐", "水山蹇",
+      "艮为山", "地山谦"
+    ];
+
+    const baguaNames = {
+      zh: ["坤", "艮", "坎", "巽", "震", "离", "兑", "乾"],
+      en: ["Earth", "Mountain", "Water", "Wind", "Thunder", "Fire", "Lake", "Heaven"],
+      ja: ["地", "山", "水", "風", "雷", "火", "沢", "天"],
+      ko: ["지", "산", "물", "바람", "천둥", "불", "연못", "하늘"]
+    };
+    
+    const gua64Names = ['乾为天', '坤为地', '水雷屯', '山水蒙', '水天需', '天水讼', '地水师', '水地比', '风天小畜', '天泽履', '地天泰', '天地否', '天火同人', '火天大有', '地山谦', '雷地豫', '泽雷随', '山风蛊', '地泽临', '风地观', '火雷噬嗑', '山火贲', '山地剥', '地雷复', '天雷无妄', '山天大畜', '山雷颐', '泽风大过', '坎为水', '离为火', '泽山咸', '雷风恒', '天山遁', '雷天大壮', '火地晋', '地火明夷', '风火家人', '火泽睽', '水山蹇', '雷水解', '山泽损', '风雷益', '泽天夬', '天风姤', '泽地萃', '地风升', '泽火革', '火风鼎', '震为雷', '艮为山', '风山渐', '雷泽归妹', '雷火丰', '火山旅', '巽为风', '兑为泽', '风水涣', '水泽节', '风泽中孚', '雷山小过', '水火既济', '火水未济'];
+
+    function tossThreeCoins() {
+      let heads = 0;
+      for (let i = 0; i < 3; i++) {
+        if (Math.random() < 0.5) heads++;
+      }
+      if (heads === 3) return 9;
+      if (heads === 2) return 7;
+      if (heads === 1) return 8;
+      return 6;
+    }
+
+    function yaoSymbol(val) {
+      const isYang = (val === 7 || val === 9);
+      const isOld = (val === 6 || val === 9);
+      const symbol = isYang ? "⚊⚊⚊" : "⚋⚋⚋";
+      const changingLineText = translations[currentLanguage].changingLine;
+      return `<span class="${isYang ? 'yang' : 'yin'}">${symbol}</span>${isOld ? ` <span class="yao-change">${changingLineText}</span>` : ''}`;
+    }
+
+    function yaoToBinary(val) {
+      return (val === 7 || val === 9) ? 1 : 0;
+    }
+
+    function getGuaName(yaoList) {
+      let lower = yaoList.slice(3).map(yaoToBinary).join('');
+      let upper = yaoList.slice(0, 3).map(yaoToBinary).join('');
+      let lowerIndex = parseInt(lower, 2);
+      let upperIndex = parseInt(upper, 2);
+      let guaIndex = upperIndex * 8 + lowerIndex;
+      
+      // 获取卦名翻译
+      let guaName = gua64Names[guaIndex];
+      let translatedName = guaName;
+      
+      if (currentLanguage !== 'zh' && guaTranslations[currentLanguage] && guaTranslations[currentLanguage][guaName]) {
+        translatedName = guaTranslations[currentLanguage][guaName];
+      }
+      
+      return {
+        name: guaName,
+        translatedName: translatedName,
+        upper: baguaNames[currentLanguage][upperIndex],
+        lower: baguaNames[currentLanguage][lowerIndex]
+      };
+    }
+
+    function getTransformedGua(yaoList) {
+      return yaoList.map(val => (val === 6 ? 7 : val === 9 ? 8 : val));
+    }
+
+    function drawBaguaSVG(threeYao) {
+      let svg = `<svg width="60" height="100">`;
+      for (let i = 0; i < 3; i++) {
+        const y = 20 + i * 25;
+        const val = threeYao[i];
+        const isYang = (val === 7 || val === 9);
+        if (isYang) {
+          svg += `<line x1="10" y1="${y}" x2="50" y2="${y}" stroke="${val === 9 ? '#e53935' : '#00897b'}" stroke-width="6"/>`;
+        } else {
+          svg += `<line x1="10" y1="${y}" x2="25" y2="${y}" stroke="${val === 6 ? '#00897b' : '#455a64'}" stroke-width="6"/>
+                  <line x1="35" y1="${y}" x2="50" y2="${y}" stroke="${val === 6 ? '#00897b' : '#455a64'}" stroke-width="6"/>`;
+        }
+      }
+      svg += `</svg>`;
+      return svg;
+    }
+
+    function getGuaLevel(guaName) {
+      if (shangshangGua.includes(guaName)) return { level: translations[currentLanguage].level.shangshang, class: "shangshang" };
+      if (zhongshangGua.includes(guaName)) return { level: translations[currentLanguage].level.zhongshang, class: "zhongshang" };
+      if (zhongxiaGua.includes(guaName)) return { level: translations[currentLanguage].level.zhongxia, class: "zhongxia" };
+      return { level: translations[currentLanguage].level.xiaxia, class: "xiaxia" };
+    }
+
+    function changeLanguage() {
+      const selector = document.getElementById('languageSelector');
+      currentLanguage = selector.value;
+      
+      // 更新界面文本
+      document.getElementById('title').textContent = translations[currentLanguage].title;
+      document.getElementById('shakeText').textContent = translations[currentLanguage].shakeButton;
+      
+      // 如果已有卦象显示，重新生成
+      if (document.getElementById('gua').innerHTML !== '') {
+        shakeGua();
+      }
+    }
+
+    function shakeGua() {
+      const guaDiv = document.getElementById("gua");
+      guaDiv.innerHTML = "";
+      
+      // 随机摇卦
+      let yaoList = [];
+      for (let i = 0; i < 6; i++) yaoList.unshift(tossThreeCoins());
+      let guaInfo = getGuaName(yaoList);
+      let guaLevel = getGuaLevel(guaInfo.name);
+
+      // 显示六爻
+      const yaoContainer = document.createElement("div");
+      yaoContainer.className = "gua-container";
+      yaoContainer.innerHTML = `<div class="gua-header">${translations[currentLanguage].sixYao}</div>`;
+      
+      const yaoContent = document.createElement("div");
+      yaoContent.className = "gua-content";
+      yaoList.forEach((val, i) => {
+        yaoContent.innerHTML += `<div class="yao">${6 - i} ${yaoSymbol(val)}</div>`;
+      });
+      yaoContainer.appendChild(yaoContent);
+      guaDiv.appendChild(yaoContainer);
+
+      // 显示本卦
+      const benGuaContainer = document.createElement("div");
+      benGuaContainer.className = "gua-container";
+      
+      benGuaContainer.innerHTML = `
+        <div class="gua-header">
+          <span>${translations[currentLanguage].originalGua}</span>
+          <span class="${guaLevel.class}">${guaLevel.level}</span>
+        </div>
+        <div style="text-align: center;">
+          <div class="gua-name">${guaInfo.translatedName}</div>
+          <div class="bagua-name">（${translations[currentLanguage].upperGua}：${guaInfo.upper}，${translations[currentLanguage].lowerGua}：${guaInfo.lower}）</div>
+          <div class="svg-box">${drawBaguaSVG(yaoList.slice(0,3))}<br>${guaInfo.upper}</div>
+          <div class="svg-box">${drawBaguaSVG(yaoList.slice(3))}<br>${guaInfo.lower}</div>
+        </div>
+      `;
+      guaDiv.appendChild(benGuaContainer);
+
+      // 显示之卦
+      const zhiList = getTransformedGua(yaoList);
+      const zhiInfo = getGuaName(zhiList);
+      const zhiLevel = getGuaLevel(zhiInfo.name);
+      
+      const zhiGuaContainer = document.createElement("div");
+      zhiGuaContainer.className = "gua-container";
+      zhiGuaContainer.innerHTML = `
+        <div class="gua-header">
+          <span>${translations[currentLanguage].changedGua}</span>
+          <span class="${zhiLevel.class}">${zhiLevel.level}</span>
+        </div>
+        <div style="text-align: center;">
+          <div class="gua-name">${zhiInfo.translatedName}</div>
+          <div class="bagua-name">（${translations[currentLanguage].upperGua}：${zhiInfo.upper}，${translations[currentLanguage].lowerGua}：${zhiInfo.lower}）</div>
+          <div class="svg-box">${drawBaguaSVG(zhiList.slice(0,3))}<br>${zhiInfo.upper}</div>
+          <div class="svg-box">${drawBaguaSVG(zhiList.slice(3))}<br>${zhiInfo.lower}</div>
+        </div>
+      `;
+      guaDiv.appendChild(zhiGuaContainer);
+
+      // 显示卦辞和爻辞
+      if (guaExplanations[guaInfo.name] && guaExplanations[guaInfo.name][currentLanguage]) {
+        const { level, guaci, yaoci } = guaExplanations[guaInfo.name][currentLanguage];
+        const explanationContainer = document.createElement("div");
+        explanationContainer.className = "gua-container";
+        
+        const levelClass = getGuaLevel(guaInfo.name).class;
+        
+        explanationContainer.innerHTML = `
+          <div class="gua-header">
+            <span>${translations[currentLanguage].guaExplanation}</span>
+            <span class="${levelClass}">${level}</span>
+          </div>
+          <div class="gua-content" style="text-align: center; font-size: 18px; font-style: italic; margin-bottom: 20px;">
+            ${guaci}
+          </div>
+          <div class="gua-header">${translations[currentLanguage].yaoExplanation}</div>
+          <div class="gua-content">
+            ${yaoList.map((val, idx) => `
+              <div class="yao">${yaoci[idx]}</div>
+            `).join("")}
+          </div>
+        `;
+        guaDiv.appendChild(explanationContainer);
+      } else {
+        // 如果没有对应语言的解释，显示提示信息
+        const explanationContainer = document.createElement("div");
+        explanationContainer.className = "gua-container";
+        explanationContainer.innerHTML = `
+          <div class="gua-header">${translations[currentLanguage].guaExplanation}</div>
+          <div class="gua-content" style="text-align: center;">
+            ${currentLanguage === 'zh' ? '暂无此卦的详细解释' : 
+              currentLanguage === 'en' ? 'No detailed explanation available for this hexagram' :
+              currentLanguage === 'ja' ? 'この卦の詳細な説明はありません' :
+              '이 괘에 대한 자세한 설명이 없습니다'}
+          </div>
+        `;
+        guaDiv.appendChild(explanationContainer);
+      }
+    }
+
+    // 初始化语言选择器
+    document.addEventListener('DOMContentLoaded', function() {
+      const userLang = navigator.language || navigator.userLanguage;
+      if (userLang.startsWith('en')) {
+        document.getElementById('languageSelector').value = 'en';
+        changeLanguage();
+      } else if (userLang.startsWith('ja')) {
+        document.getElementById('languageSelector').value = 'ja';
+        changeLanguage();
+      } else if (userLang.startsWith('ko')) {
+        document.getElementById('languageSelector').value = 'ko';
+        changeLanguage();
+      }
+    });
+  </script>
+</body>
+</html>
