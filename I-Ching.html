@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>每日一卦</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+  <div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full text-center">
+    <h1 class="text-3xl font-bold mb-4 text-red-600" id="title">每日一卦</h1>
+    <div id="result" class="text-xl mb-4"></div>
+    <div id="description" class="text-lg mb-4"></div>
+    <div id="yi" class="text-left mb-4">
+      <p class="font-semibold text-green-600" id="yi-title">宜：</p>
+      <ul id="yi-list" class="list-disc list-inside"></ul>
+    </div>
+    <div id="ji" class="text-left">
+      <p class="font-semibold text-red-600" id="ji-title">忌：</p>
+      <ul id="ji-list" class="list-disc list-inside"></ul>
+    </div>
+    <button onclick="drawFortune()" class="mt-6 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700" id="draw-button">抽取今日一卦</button>
+
+    <!-- Language Selector -->
+    <div class="mt-6">
+      <button onclick="changeLanguage('zh')" class="px-4 py-2 rounded bg-gray-200">中文</button>
+      <button onclick="changeLanguage('ja')" class="px-4 py-2 rounded bg-gray-200">日本語</button>
+      <button onclick="changeLanguage('ko')" class="px-4 py-2 rounded bg-gray-200">한국어</button>
+      <button onclick="changeLanguage('en')" class="px-4 py-2 rounded bg-gray-200">English</button>
+    </div>
+  </div>
+
+  <script>
+    const languageData = {
+      zh: {
+        title: "每日一卦",
+        drawButton: "抽取今日一卦",
+        yiTitle: "宜：",
+        jiTitle: "忌：",
+        fortunes: [
+          {
+            name: "大吉",
+            description: "运势极佳，诸事顺遂，心想事成。",
+            yi: ["万事皆宜"],
+            ji: []
+          },
+          {
+            name: "中吉",
+            description: "运势平稳，循序渐进，可得小成。",
+            yi: ["求学", "交友", "出行", "合作", "祈福"],
+            ji: ["冒险", "争斗", "投机", "远行"]
+          },
+          {
+            name: "小吉",
+            description: "运势略佳，需谨慎行事，方可无忧。",
+            yi: ["静思", "家务", "小规模投资", "学习新技能"],
+            ji: ["搬家", "大额交易", "激烈争执", "长途旅行"]
+          },
+          {
+            name: "凶",
+            description: "运势不佳，宜低调谨慎，避免风险。",
+            yi: ["休息", "反思", "整理旧物"],
+            ji: ["签约", "投资", "出行", "争吵", "冒险"]
+          },
+          {
+            name: "大凶",
+            description: "运势极差，需格外小心，静待时机。",
+            yi: [],
+            ji: ["万事不宜"]
+          }
+        ]
+      },
+      ja: {
+        title: "今日の卦",
+        drawButton: "今日の卦を引く",
+        yiTitle: "宜：",
+        jiTitle: "忌：",
+        fortunes: [
+          {
+            name: "大吉",
+            description: "運勢が非常に良い、すべてが順調、願いがかなう。",
+            yi: ["すべてが良い"],
+            ji: []
+          },
+          {
+            name: "中吉",
+            description: "運勢は安定している、着実に進むことで小さな成功を得られる。",
+            yi: ["学習", "友達作り", "外出", "協力", "祈り"],
+            ji: ["冒険", "争い", "投機", "長距離の旅行"]
+          },
+          {
+            name: "小吉",
+            description: "運勢が少し良い、慎重に行動することで問題ない。",
+            yi: ["静かな思索", "家事", "小規模な投資", "新しいスキルの学習"],
+            ji: ["引っ越し", "大きな取引", "激しい争い", "長距離旅行"]
+          },
+          {
+            name: "凶",
+            description: "運勢が悪い、慎重に過ごすべき。",
+            yi: ["休息", "反省", "整理整頓"],
+            ji: ["契約", "投資", "外出", "争い", "冒険"]
+          },
+          {
+            name: "大凶",
+            description: "運勢が非常に悪い、特に慎重に過ごすべき。",
+            yi: [],
+            ji: ["何もするべきではない"]
+          }
+        ]
+      },
+      ko: {
+        title: "오늘의 점",
+        drawButton: "오늘의 점을 뽑기",
+        yiTitle: "좋은 점:",
+        jiTitle: "피해야 할 점:",
+        fortunes: [
+          {
+            name: "대길",
+            description: "운세가 매우 좋으며, 모든 일이 순조롭고, 소망이 이루어진다.",
+            yi: ["모든 일에 유리"],
+            ji: []
+          },
+          {
+            name: "중길",
+            description: "운세는 안정적이며, 착실히 진행하면 작은 성취를 이룰 수 있다.",
+            yi: ["학문", "교우", "여행", "협력", "기도"],
+            ji: ["모험", "논쟁", "투기", "원거리 여행"]
+          },
+          {
+            name: "소길",
+            description: "운세는 다소 좋지만 신중하게 행동해야 한다.",
+            yi: ["명상", "집안일", "소규모 투자", "새로운 기술 학습"],
+            ji: ["이사", "큰 거래", "격렬한 다툼", "장거리 여행"]
+          },
+          {
+            name: "흉",
+            description: "운세가 나쁘므로 조심스럽게 행동해야 한다.",
+            yi: ["휴식", "반성", "정리정돈"],
+            ji: ["계약", "투자", "여행", "논쟁", "모험"]
+          },
+          {
+            name: "대흉",
+            description: "운세가 매우 나쁘므로 매우 조심해야 한다.",
+            yi: [],
+            ji: ["아무 일도 하지 말 것"]
+          }
+        ]
+      },
+      en: {
+        title: "Daily Fortune",
+        drawButton: "Draw Today's Fortune",
+        yiTitle: "Good to do:",
+        jiTitle: "Avoid doing:",
+        fortunes: [
+          {
+            name: "Great Luck",
+            description: "Excellent luck, everything goes smoothly, wishes come true.",
+            yi: ["Everything is favorable"],
+            ji: []
+          },
+          {
+            name: "Moderate Luck",
+            description: "Stable luck, gradual progress leads to small achievements.",
+            yi: ["Learning", "Making friends", "Traveling", "Cooperation", "Praying"],
+            ji: ["Adventure", "Arguments", "Speculation", "Long trips"]
+          },
+          {
+            name: "Small Luck",
+            description: "Slightly favorable luck, need to be cautious to avoid problems.",
+            yi: ["Contemplation", "Housework", "Small investments", "Learning new skills"],
+            ji: ["Moving", "Big transactions", "Intense arguments", "Long-distance travel"]
+          },
+          {
+            name: "Bad Luck",
+            description: "Unfavorable luck, proceed with caution and avoid risks.",
+            yi: ["Rest", "Reflection", "Organizing old things"],
+            ji: ["Signing contracts", "Investing", "Traveling", "Arguments", "Adventuring"]
+          },
+          {
+            name: "Great Misfortune",
+            description: "Very bad luck, extreme caution is needed, wait for a better time.",
+            yi: [],
+            ji: ["Do not do anything"]
+          }
+        ]
+      }
+    };
+
+    let currentLanguage = 'zh'; // Default language
+
+    function drawFortune() {
+      const fortune = languageData[currentLanguage].fortunes[Math.floor(Math.random() * languageData[currentLanguage].fortunes.length)];
+
+      document.getElementById("result").innerText = `今日卦象：${fortune.name}`;
+      document.getElementById("description").innerText = fortune.description;
+
+      const yiList = document.getElementById("yi-list");
+      yiList.innerHTML = "";
+      fortune.yi.forEach(item => {
+        const li = document.createElement("li");
+        li.innerText = item;
+        yiList.appendChild(li);
+      });
+
+      const jiList = document.getElementById("ji-list");
+      jiList.innerHTML = "";
+      fortune.ji.forEach(item => {
+        const li = document.createElement("li");
+        li.innerText = item;
+        jiList.appendChild(li);
+      });
+    }
+
+    function changeLanguage(language) {
+      currentLanguage = language;
+
+      document.getElementById("title").innerText = languageData[language].title;
+      document.getElementById("draw-button").innerText = languageData[language].drawButton;
+      document.getElementById("yi-title").innerText = languageData[language].yiTitle;
+      document.getElementById("ji-title").innerText = languageData[language].jiTitle;
+
+      drawFortune(); // Redraw the fortune in the selected language
+    }
+
+    // Automatically draw a fortune on page load
+    window.onload = drawFortune;
+  </script>
+</body>
+</html>
