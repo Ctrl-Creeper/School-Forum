@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campus Forum Columns</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+  <div class="container mx-auto p-4">
+    <!-- Header -->
+    <header class="text-center py-6">
+      <h1 class="text-3xl font-bold text-gray-800">Campus Forum Columns / 校园论坛专栏</h1>
+      <p class="text-gray-600 mt-2">Explore various topics or add your own column! / 浏览多样主题或添加您自己的专栏！</p>
+    </header>
+
+    <!-- Language Toggle -->
+    <div class="flex justify-end mb-4">
+      <button id="langToggle" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+        English / 中文
+      </button>
+    </div>
+
+    <!-- Columns Section -->
+    <section id="columns" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Column Card -->
+      <div class="column-card bg-white p-6 rounded-lg shadow-md" data-lang="en">
+        <h2 class="text-xl font-semibold">Academics</h2>
+        <p class="text-gray-600 mt-2">Discuss courses, study tips, and research.</p>
+      </div>
+      <div class="column-card bg-white p-6 rounded-lg shadow-md" data-lang="zh">
+        <h2 class="text-xl font-semibold">学术</h2>
+        <p class="text-gray-600 mt-2">讨论课程、学习技巧和研究。</p>
+      </div>
+
+      <div class="column-card bg-white p-6 rounded-lg shadow-md" data-lang="en">
+        <h2 class="text-xl font-semibold">Lifestyle</h2>
+        <p class="text-gray-600 mt-2">Share campus life, food, and hobbies.</p>
+      </div>
+      <div class="column-card bg-white p-6 rounded-lg shadow-md" data-lang="zh">
+        <h2 class="text-xl font-semibold">生活</h2>
+        <p class="text-gray-600 mt-2">分享校园生活、美食和兴趣爱好。</p>
+      </div>
+
+      <div class="column-card bg-white p-6 rounded-lg shadow-md" data-lang="en">
+        <h2 class="text-xl font-semibold">Sports Betting</h2>
+        <p class="text-gray-600 mt-2">Talk about sports predictions and tips.</p>
+      </div>
+      <div class="column-card bg-white p-6 rounded-lg shadow-md" data-lang="zh">
+        <h2 class="text-xl font-semibold">体育博彩</h2>
+        <p class="text-gray-600 mt-2">讨论体育预测和技巧。</p>
+      </div>
+
+      <div class="column-card bg-white p-6 rounded-lg shadow-md" data-lang="en">
+        <h2 class="text-xl font-semibold">Entertainment</h2>
+        <p class="text-gray-600 mt-2">Movies, music, and campus events.</p>
+      </div>
+      <div class="column-card bg-white p-6 rounded-lg shadow-md" data-lang="zh">
+        <h2 class="text-xl font-semibold">娱乐</h2>
+        <p class="text-gray-600 mt-2">电影、音乐和校园活动。</p>
+      </div>
+    </section>
+
+    <!-- Add Column Form -->
+    <section class="mt-8">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4">Add a New Column / 添加新专栏</h2>
+      <div class="bg-white p-6 rounded-lg shadow-md">
+        <div class="grid grid-cols-1 gap-4">
+          <input id="columnNameEn" type="text" placeholder="Column Name (English) / 专栏名称（英文）" class="border p-2 rounded">
+          <input id="columnNameZh" type="text" placeholder="Column Name (Chinese) / 专栏名称（中文）" class="border p-2 rounded">
+          <textarea id="columnDescEn" placeholder="Description (English) / 描述（英文）" class="border p-2 rounded"></textarea>
+          <textarea id="columnDescZh" placeholder="Description (Chinese) / 描述（中文）" class="border p-2 rounded"></textarea>
+          <select id="category" class="border p-2 rounded">
+            <option value="academics">Academics / 学术</option>
+            <option value="lifestyle">Lifestyle / 生活</option>
+            <option value="sports">Sports Betting / 体育博彩</option>
+            <option value="entertainment">Entertainment / 娱乐</option>
+          </select>
+          <button id="addColumnBtn" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+            Submit / 提交
+          </button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // Language Toggle
+    const langToggle = document.getElementById('langToggle');
+    const columns = document.querySelectorAll('.column-card');
+    let isEnglish = true;
+
+    langToggle.addEventListener('click', () => {
+      isEnglish = !isEnglish;
+      langToggle.textContent = isEnglish ? 'English / 中文' : '中文 / English';
+      columns.forEach(card => {
+        card.style.display = card.dataset.lang === (isEnglish ? 'en' : 'zh') ? 'block' : 'none';
+      });
+    });
+
+    // Initialize display
+    columns.forEach(card => {
+      card.style.display = card.dataset.lang === 'en' ? 'block' : 'none';
+    });
+
+    // Add Column Functionality
+    document.getElementById('addColumnBtn').addEventListener('click', () => {
+      const nameEn = document.getElementById('columnNameEn').value;
+      const nameZh = document.getElementById('columnNameZh').value;
+      const descEn = document.getElementById('columnDescEn').value;
+      const descZh = document.getElementById('columnDescZh').value;
+      const category = document.getElementById('category').value;
+
+      if (nameEn && nameZh && descEn && descZh) {
+        const columnsSection = document.getElementById('columns');
+        const newCardEn = document.createElement('div');
+        newCardEn.className = 'column-card bg-white p-6 rounded-lg shadow-md';
+        newCardEn.dataset.lang = 'en';
+        newCardEn.innerHTML = `<h2 class="text-xl font-semibold">${nameEn}</h2><p class="text-gray-600 mt-2">${descEn}</p>`;
+        newCardEn.style.display = isEnglish ? 'block' : 'none';
+
+        const newCardZh = document.createElement('div');
+        newCardZh.className = 'column-card bg-white p-6 rounded-lg shadow-md';
+        newCardZh.dataset.lang = 'zh';
+        newCardZh.innerHTML = `<h2 class="text-xl font-semibold">${nameZh}</h2><p class="text-gray-600 mt-2">${descZh}</p>`;
+        newCardZh.style.display = isEnglish ? 'none' : 'block';
+
+        columnsSection.appendChild(newCardEn);
+        columnsSection.appendChild(newCardZh);
+
+        // Clear form
+        document.getElementById('columnNameEn').value = '';
+        document.getElementById('columnNameZh').value = '';
+        document.getElementById('columnDescEn').value = '';
+        document.getElementById('columnDescZh').value = '';
+        alert('Column submitted for review! / 专栏已提交审核！');
+      } else {
+        alert('Please fill in all fields! / 请填写所有字段！');
+      }
+    });
+  </script>
+</body>
+</html>
