@@ -103,7 +103,18 @@
       card.style.display = card.dataset.lang === 'en' ? 'block' : 'none';
     });
 
-    // Add Column Functionality
+    // Blocked words for content review
+    const blockedWords = [
+    ////////////////  
+    ];
+
+    // Function to check for blocked words
+    function containsBlockedWords(text) {
+      const lowerText = text.toLowerCase();
+      return blockedWords.some(word => lowerText.includes(word.toLowerCase()));
+    }
+
+    // Add Column Functionality with Auto-Review
     document.getElementById('addColumnBtn').addEventListener('click', () => {
       const nameEn = document.getElementById('columnNameEn').value;
       const nameZh = document.getElementById('columnNameZh').value;
@@ -111,32 +122,42 @@
       const descZh = document.getElementById('columnDescZh').value;
       const category = document.getElementById('category').value;
 
-      if (nameEn && nameZh && descEn && descZh) {
-        const columnsSection = document.getElementById('columns');
-        const newCardEn = document.createElement('div');
-        newCardEn.className = 'column-card bg-white p-6 rounded-lg shadow-md';
-        newCardEn.dataset.lang = 'en';
-        newCardEn.innerHTML = `<h2 class="text-xl font-semibold">${nameEn}</h2><p class="text-gray-600 mt-2">${descEn}</p>`;
-        newCardEn.style.display = isEnglish ? 'block' : 'none';
-
-        const newCardZh = document.createElement('div');
-        newCardZh.className = 'column-card bg-white p-6 rounded-lg shadow-md';
-        newCardZh.dataset.lang = 'zh';
-        newCardZh.innerHTML = `<h2 class="text-xl font-semibold">${nameZh}</h2><p class="text-gray-600 mt-2">${descZh}</p>`;
-        newCardZh.style.display = isEnglish ? 'none' : 'block';
-
-        columnsSection.appendChild(newCardEn);
-        columnsSection.appendChild(newCardZh);
-
-        // Clear form
-        document.getElementById('columnNameEn').value = '';
-        document.getElementById('columnNameZh').value = '';
-        document.getElementById('columnDescEn').value = '';
-        document.getElementById('columnDescZh').value = '';
-        alert('Column submitted for review! / 专栏已提交审核！');
-      } else {
+      // Check if all fields are filled
+      if (!nameEn || !nameZh || !descEn || !descZh) {
         alert('Please fill in all fields! / 请填写所有字段！');
+        return;
       }
+
+      // Auto-review for blocked words
+      if (containsBlockedWords(nameEn) || containsBlockedWords(nameZh) ||
+          containsBlockedWords(descEn) || containsBlockedWords(descZh)) {
+        alert('Submission rejected: Inappropriate content detected! / 提交被拒绝：检测到不适当内容！');
+        return;
+      }
+
+      // If review passes, add the new column
+      const columnsSection = document.getElementById('columns');
+      const newCardEn = document.createElement('div');
+      newCardEn.className = 'column-card bg-white p-6 rounded-lg shadow-md';
+      newCardEn.dataset.lang = 'en';
+      newCardEn.innerHTML = `<h2 class="text-xl font-semibold">${nameEn}</h2><p class="text-gray-600 mt-2">${descEn}</p>`;
+      newCardEn.style.display = isEnglish ? 'block' : 'none';
+
+      const newCardZh = document.createElement('div');
+      newCardZh.className = 'column-card bg-white p-6 rounded-lg shadow-md';
+      newCardZh.dataset.lang = 'zh';
+      newCardZh.innerHTML = `<h2 class="text-xl font-semibold">${nameZh}</h2><p class="text-gray-600 mt-2">${descZh}</p>`;
+      newCardZh.style.display = isEnglish ? 'none' : 'block';
+
+      columnsSection.appendChild(newCardEn);
+      columnsSection.appendChild(newCardZh);
+
+      // Clear form
+      document.getElementById('columnNameEn').value = '';
+      document.getElementById('columnNameZh').value = '';
+      document.getElementById('columnDescEn').value = '';
+      document.getElementById('columnDescZh').value = '';
+      alert('Column added successfully! / 专栏添加成功！');
     });
   </script>
 </body>
